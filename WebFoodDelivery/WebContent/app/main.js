@@ -4,19 +4,15 @@ app.config(function($routeProvider) {
     $routeProvider
     .when("/", {
     	
-        templateUrl: 'home.html'
+        templateUrl: 'index.html'
     })
     .when("/cinema", {
-    	
-        templateUrl: 'a.html'
+        templateUrl: 'home.html'
     }) 
 });
 
 
 app.controller('indexCtrl', function($scope, $window) {
 
-	var type = $window.sessionStorage.getItem('usertype');
-	
-  
-    
+	  
 });

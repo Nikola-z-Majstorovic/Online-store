@@ -1,32 +1,17 @@
-<html>
+<html ng-app="myApp">
 <head>
 <title>Pocetna</title>
 
-	<script language="JavaScript" src="angular.min.js"></script>
-	<script language="JavaScript" src="angular-route.js"></script>
-	
-	<script src="main.js"></script>
 </head>
-<body ng-app="myApp">
+<body>
 <h1>Welcome</h1>
-<div ng-controller = "indexCtrl">
-	<ul class="navbar">
-		<li><a href="#!/">Home</a></li>
-  		<li><a href="#!cinema">Cinema</a></li>
-  		<li><a href="#!theatre">Theatre</a></li>
-  		<li><a href="#!film">Movies</a></li>
-  		<li><a href="#!play">Shows</a></li>
-  		
-  		
-  		<li class="right" ng-style="logIn"><a href="#!login">Log in</a></li>
-  		<li class="right" ng-style="logOut"><a href="#!logout">Log out</a></li>
-  		<li class="right" ng-style="account"><a href="#!account">Account</a></li>
-  		<li class="right" ng-style="myTickets"><a href="#!mytickets">My tickets</a></li>
-  		
-    
-  		<li class="right"><a href="funZone.html">Fun zona</a></li>
-	</ul>
+
+
 	<div ng-view></div>
-</div>
+		<script src="js/angular.js"></script>
+		<script src="js/angular-route.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/toast.js"></script>
+		<script src="app/main.js"></script>
 </body>
 </html>
