@@ -7,6 +7,9 @@ public class Customer extends User {
 	private List<Order> orders;
 	private List<Restaurant> favoriteRestaurants;
 	
+	public Customer(String path) {
+		// TODO Auto-generated constructor stub
+	}
 
 	public List<Order> getOrders() {
 		return orders;

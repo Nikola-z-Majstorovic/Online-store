@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class Vehicle {
 
-	private int id;
 	private String brand;
 	private String model;
 	private Type tip;
@@ -17,10 +16,10 @@ public class Vehicle {
 		super();
 	}
 
-	public Vehicle(int id,String brand, String model, Type tip, String register, Date yearOfProduction, boolean inUse,
+	public Vehicle(String brand, String model, Type tip, String register, Date yearOfProduction, boolean inUse,
 			String note) {
 		super();
-		this.id=id;
+		
 		this.brand = brand;
 		this.model = model;
 		this.tip = tip;
@@ -30,13 +29,7 @@ public class Vehicle {
 		this.note = note;
 	}
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getBrand() {
 		return brand;

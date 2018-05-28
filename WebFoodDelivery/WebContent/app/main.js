@@ -2,17 +2,14 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.config(function($routeProvider) {
     $routeProvider
-    .when("/", {
+    .when("/signUp", {
+		templateUrl: 'partials/home.html'
+    }).when("/signUp", {
     	
-        templateUrl: 'index.html'
+		templateUrl: 'partials/signUp.html'
+    }).when("/signIn", {
+		templateUrl: 'partials/signIn.html'
     })
-    .when("/cinema", {
-        templateUrl: 'home.html'
-    }) 
 });
 
 
-app.controller('indexCtrl', function($scope, $window) {
-
-	  
-});

@@ -4,38 +4,30 @@ import java.util.Date;
 
 public class User {
 
-	private int id;
 	private String username;
-	private String name;
 	private String password;
-//	private Role role;
+	private String name;
+	private String surname;
+	//	private Role role;
 	private String phone;
 	private String email;
-	private Date dateOfRegistration;
+	//private Date dateOfRegistration;
 	
 	public User() {
 		super();
 	}
 
-	public User(int id,String username, String name, String password, String phone, String email,
-			Date dateOfRegistration) {
+	public User(String username, String name, String password, String phone, String email
+			/*,Date dateOfRegistration*/ ) {
 		super();
-		this.id=id;
 		this.username = username;
 		this.name = name;
 		this.password = password;
 		this.phone = phone;
 		this.email = email;
-		this.dateOfRegistration = dateOfRegistration;
+	//	this.dateOfRegistration = dateOfRegistration;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getUsername() {
 		return username;
@@ -77,15 +69,21 @@ public class User {
 		this.email = email;
 	}
 
-	public Date getDateOfRegistration() {
-		return dateOfRegistration;
+//	public Date getDateOfRegistration() {
+//		return dateOfRegistration;
+//	}
+//
+//	public void setDateOfRegistration(Date dateOfRegistration) {
+//		this.dateOfRegistration = dateOfRegistration;
+//	}
+	
+	public String getSurname() {
+		return surname;
 	}
 
-	public void setDateOfRegistration(Date dateOfRegistration) {
-		this.dateOfRegistration = dateOfRegistration;
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
-	
-	
 	
 	
 }
