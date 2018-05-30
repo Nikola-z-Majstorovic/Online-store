@@ -1,25 +1,34 @@
-app.controller('signInController', function($scope) {
+app.controller("signInController", function($scope,signUpFactory) {
+	$scope.submit = function() {
 
-
-});
-app.controller('signUpController', function($scope,signUpFactory) {
-
-    function init() {
-    	console.log('signUpController.Init');
-    	signUpFactory.getCustomers.success(function (data) {
-        	$scope.customers = data;
-		});
-    }
-	init();
-	
-	
-	$scope.addCustomer = function(customer) {
-		signUpFactory.addCustomer(customer).then(function(data) {
-			toast('Customer ' + customer.username + " registrated.");
-		}).catch(function (response) {
-			//$notify.error(response.msg);
-			toast("Username and/or email are alredy busy.");
-		});	
+		$scope.user.username;
+		$scope.user.password;
+			getCustomer();
 	};
+	function getCustomer() {
+			signUpFactory.getCustomers().success(function(data) {
+				$scope.test=data;
+		});
+	}
+});
+app.controller("signUpController", function($scope, signUpFactory ) {
+		$scope.submit = function() {
+			$scope.customer.username;
+			$scope.customer.password;
+			$scope.customer.name;
+			$scope.customer.surname;
+			$scope.customer.email;
+			$scope.customer.phone;
+			addCustomer($scope.customer);
+		};
+		
+		function addCustomer(customer) {
+			signUpFactory.addCustomer(customer).then(function(data) {
+				toast('Customer ' + volonter.korisnickoIme + " registrated.");
+			}).catch(function (response) {
+				//$notify.error(response.msg);
+				toast("Customer name and/or email are alredy busy.");
+			});	
+		}
 	
 });

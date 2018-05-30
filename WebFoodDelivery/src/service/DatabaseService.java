@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 
 import model.Customer;
 import model.Database;
+import model.User;
 
 
 @Path("/database")
@@ -31,14 +32,15 @@ public class DatabaseService {
 	@Path("/addCustomer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addCustomer(Customer customer) {
-		if(getDataBase().usernameExists(customer.getName())) {
+	public Response addCustomer(User user) {
+		System.out.println("RADI OVO SKRANJE");
+		if(getDataBase().usernameExists(user.getName())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate username\"}").build();
 		}
-		else if(getDataBase().emailExists(customer.getEmail())) {
+		else if(getDataBase().emailExists(user.getEmail())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate email\"}").build();
 		}
-		getDataBase().getCustomers().put(customer.getName(), customer);
+		getDataBase().getCustomers().put(user.getName(), (Customer) user);
 		getDataBase().writeData();
 		return Response.ok().build();
 	}
@@ -48,6 +50,12 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Customer> getCustomers() {
 		return getDataBase().getCustomerValues();
+	}
+	
+	@GET
+	@Path("/test")
+	public String test() {
+		return "REST is working.";
 	}
 	
 	private Database getDataBase() {

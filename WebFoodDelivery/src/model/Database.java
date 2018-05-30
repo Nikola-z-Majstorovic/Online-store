@@ -108,7 +108,7 @@ public class Database {
 		
 	}
 	private void writeCustomer(String path) {
-		
+		System.out.println("usao");
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 
