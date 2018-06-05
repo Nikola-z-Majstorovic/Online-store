@@ -6,6 +6,5 @@ app.controller('signInController', function($scope,customerFactory) {
 		
 	    }
 		init();
-		
-		
+
 });

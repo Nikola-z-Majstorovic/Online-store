@@ -6,6 +6,12 @@ app.config(function($routeProvider) {
 		templateUrl: 'partials/signUp.html'
     }).when("/signIn", {
 		templateUrl: 'partials/signIn.html'
+    }).when("/restorants", {
+		templateUrl: 'partials/restaurants.html',
+		controller: 'getRes'
+    }).when("/me", {
+		templateUrl: 'partials/userSettings.html'
+		
     })
 });
 

@@ -32,6 +32,7 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addUser(User user) {
+
 		if(getDataBase().usernameExists(user.getName())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate username\"}").build();
 		}
