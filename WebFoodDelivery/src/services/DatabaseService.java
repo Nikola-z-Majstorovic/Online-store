@@ -1,4 +1,4 @@
-package service;
+package services;
 
 import java.util.Collection;
 
@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import model.Customer;
 import model.Database;
+import model.User;
 
 
 @Path("/database")
@@ -28,26 +28,26 @@ public class DatabaseService {
 
 	
 	@POST
-	@Path("/addCustomer")
+	@Path("/addUser")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addCustomer(Customer customer) {
-		if(getDataBase().usernameExists(customer.getName())) {
+	public Response addUser(User user) {
+		if(getDataBase().usernameExists(user.getName())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate username\"}").build();
 		}
-		else if(getDataBase().emailExists(customer.getEmail())) {
+		else if(getDataBase().emailExists(user.getEmail())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate email\"}").build();
 		}
-		getDataBase().getCustomers().put(customer.getName(), customer);
+		getDataBase().getUsers().put(user.getName(), user);
 		getDataBase().writeData();
 		return Response.ok().build();
 	}
 
 	@GET
-	@Path("/getCustomers")
+	@Path("/getUsers")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Customer> getCustomers() {
-		return getDataBase().getCustomerValues();
+	public Collection<User> getUsers() {
+		return getDataBase().getUsersValues();
 	}
 	
 	private Database getDataBase() {
@@ -57,5 +57,24 @@ public class DatabaseService {
 			context.setAttribute("customer", database);
 		} 
 		return database;
+	}
+	
+	@GET
+	@Path("/test")
+	public String test() {
+		return "REST is working.";
+	}
+	
+	@POST
+	@Path("/signIn")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response signIn(User user) {
+		if(getDataBase().loginCheck(user)) {
+			return Response.ok().build();
+		}
+		else {
+			return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
+		}
 	}
 }

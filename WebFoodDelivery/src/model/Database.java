@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 
 public class Database {
 
-	HashMap<String, Customer> customers;
+	HashMap<String, User> users;
 	HashMap<String, Article> atricles;
 	HashMap<String, Restaurant> restaurants;
 	HashMap<String, Vehicle> vehicles;
@@ -28,12 +28,12 @@ public class Database {
 		this.path = path;
 	}
 
-	public HashMap<String, Customer> getCustomers() {
-		return customers;
+	public HashMap<String, User> getUsers() {
+		return users;
 	}
 
-	public void setCustomers(HashMap<String, Customer> customers) {
-		this.customers = customers;
+	public void setUsers(HashMap<String, User> users) {
+		this.users = users;
 	}
 
 	public HashMap<String, Article> getAtricles() {
@@ -67,13 +67,12 @@ public class Database {
 	public void setOrders(HashMap<String, Order> orders) {
 		this.orders = orders;
 	}
-	
-	public Collection<Customer> getCustomerValues() {
-		return customers.values();
+	public Collection<User> getUsersValues() {
+		return users.values();
 	}
 	
 	public boolean usernameExists(String username) {
-		for(String key : customers.keySet()) {
+		for(String key : users.keySet()) {
 			if(key.equalsIgnoreCase(username)) {
 				return true;
 			}
@@ -81,8 +80,8 @@ public class Database {
 		return false;
 	}
 	public boolean emailExists(String email) {
-		for(Customer customer : customers.values()) {
-			if((customer.getEmail()).equalsIgnoreCase(email)) {
+		for(User user : users.values()) {
+			if((user.getEmail()).equalsIgnoreCase(email)) {
 				return true;
 			}
 		}
@@ -112,20 +111,20 @@ public class Database {
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 
-		for(Customer customer : getCustomerValues()) {
+		for(User user : getUsersValues()) {
 			JSONObject object = new JSONObject();
-			object.put("username", customer.getUsername());
-			object.put("password",customer.getPassword());
-			object.put("name", customer.getName());
-			object.put("surname", customer.getSurname());
-			object.put("phone", customer.getPhone());
-			object.put("email", customer.getEmail());
+			object.put("username", user.getUsername());
+			object.put("password",user.getPassword());
+			object.put("name", user.getName());
+			object.put("surname", user.getSurname());
+			object.put("phone", user.getPhone());
+			object.put("email", user.getEmail());
 			array.add(object);
 		}
 		
 		try {
-			obj.put("customers", array);
-		    FileWriter file = new FileWriter(path+"dummyFiles/customers.json");
+			obj.put("users", array);
+		    FileWriter file = new FileWriter(path+"dummyFiles/users.json");
 		    file.write(obj.toString());
 		    file.flush();
 		    file.close();
@@ -134,5 +133,15 @@ public class Database {
 		    e.printStackTrace();
 		}
 		
+	}
+	public boolean loginCheck(User user) {
+		for(User user2 : users.values()) {
+			if((user2.getUsername()).equalsIgnoreCase(user.getUsername())) {
+				if(user2.getPassword().equalsIgnoreCase(user.getPassword())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
