@@ -1,6 +1,8 @@
 package model;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +11,9 @@ import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 
 public class Database {
 
@@ -23,10 +28,13 @@ public class Database {
 		super();
 	}
 	
+	@SuppressWarnings("unused")
 	public Database(String path) {
 		BufferedReader in = null;
 		this.path = path;
+		readUsers(path);
 	}
+
 
 	public HashMap<String, User> getUsers() {
 		return users;
@@ -67,6 +75,14 @@ public class Database {
 	public void setOrders(HashMap<String, Order> orders) {
 		this.orders = orders;
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	private Collection<Restaurant> getRestaurantsValues() {
+		return restaurants.values();
+		
+	}
+	
 	public Collection<User> getUsersValues() {
 		return users.values();
 	}
@@ -91,8 +107,8 @@ public class Database {
 		
 		PrintWriter out = null;
 		try {
-			writeCustomer(this.path);
-
+			writeUser(this.path);
+			writeRestaurant(this.path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,8 +122,75 @@ public class Database {
 		}
 		
 	}
-	private void writeCustomer(String path) {
-		System.out.println("usao");
+	
+	 
+	@SuppressWarnings("unchecked")
+	private void writeRestaurant(String path) {
+		JSONArray array = new JSONArray();
+		JSONObject obj = new JSONObject();
+		for(Restaurant restaurant : getRestaurantsValues()) {
+			JSONObject object = new JSONObject();
+			object.put("name",restaurant.getName());
+			object.put("adress", restaurant.getAdress());
+			object.put("category", restaurant.getCategory());
+			array.add(object);
+		}
+		obj.put("restaurants",array);
+		FileWriter file;
+		try {
+			file = new FileWriter(path+"dummyFiles/restaurants.json");
+		    file.write(obj.toString());
+		    file.flush();
+		    file.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	private void readUsers(String path) {
+		JSONParser parser = new JSONParser();
+		
+
+        try {
+
+            Object obj = parser.parse(new FileReader(path + "dummyFiles/users.json"));
+
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray users1 = (JSONArray) jsonObject.get("users");
+            
+            String username = "", password = "", name = "", surname = "",
+    				phone = "", email = "";
+
+            for (Object user1 : users1) {
+            	JSONObject user2 = (JSONObject) user1;
+				User user = new User(username, password, name, surname, phone, email);
+				username= (String) user2.get("username");
+				password= (String) user2.get("password");
+				name= (String) user2.get("name");
+				surname= (String) user2.get("surname");
+				phone= (String) user2.get("phone");
+				email= (String) user2.get("email");
+				if(!users.containsKey(username)) 
+					users.put(username, user);
+            }
+            
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+	}
+	
+
+
+	@SuppressWarnings("unchecked")
+	private void writeUser(String path) {
+	
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 
@@ -135,13 +218,23 @@ public class Database {
 		
 	}
 	public boolean loginCheck(User user) {
-		for(User user2 : users.values()) {
-			if((user2.getUsername()).equalsIgnoreCase(user.getUsername())) {
-				if(user2.getPassword().equalsIgnoreCase(user.getPassword())) {
+		for(User value : users.values()) {
+			if((value.getUsername()).equalsIgnoreCase(user.getUsername())) {
+				if(value.getPassword().equalsIgnoreCase(user.getPassword())) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
+	
+	public boolean restaurantExist(String name) {
+		for(String key : restaurants.keySet()) {
+			if(key.equalsIgnoreCase(name));
+			return true;
+		}
+		return false;
+	}
+	
 }
+

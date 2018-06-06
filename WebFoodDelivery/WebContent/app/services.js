@@ -1,12 +1,12 @@
-app.factory('customerFactory', function($http) {
+app.factory('userFactory', function($http) {
 
 	var factory = {};
-	factory.getCustomers = function() {
-		return $http.get('/WebFoodDelivery/rest/database/signIn');
+	factory.getUser = function(user) {
+		return $http.post('/WebFoodDelivery/rest/database/signIn',user);
 	};
 
-	factory.addCustomer = function(customer) {
-		return $http.post('/WebFoodDelivery/rest/database/addCustomer', customer);
+	factory.addUser = function(user) {
+		return $http.post('/WebFoodDelivery/rest/database/addUser', user);
 	};
 	return factory;
 	
