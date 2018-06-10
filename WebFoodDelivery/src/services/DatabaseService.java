@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import model.Database;
 import model.Restaurant;
 import model.User;
+import model.Vehicle;
 
 
 @Path("/database")
@@ -29,26 +30,9 @@ public class DatabaseService {
 	@Path("/getUsers")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<User> getUsers() {
-		return getDataBase().getUsersValues();
+		return getDataBase().getUsers().values();
 	}
 	
-	@POST
-	@Path("/signUp")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addUser(User user) {
-		if(getDataBase().usernameExists(user.getName())) {
-			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate username\"}").build();
-		}
-		else if(getDataBase().emailExists(user.getEmail())) {
-			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate email\"}").build();
-		}
-		getDataBase().getUsers().put(user.getUsername(), user);
-		getDataBase().writeData();
-		return Response.ok().build();
-	}
-
-
 	@POST
 	@Path("/signIn")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -61,18 +45,48 @@ public class DatabaseService {
 			return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
 		}
 	}
+	
+	@POST
+	@Path("/signUp")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addUser(User user) {
+		if(getDataBase().usernameExists(user.getUsername())) { 
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate username\"}").build();
+		}
+		else if(getDataBase().emailExists(user.getEmail())) {
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Duplicate email\"}").build();
+		}
+		
+		getDataBase().getUsers().put(user.getUsername(),user);
+		getDataBase().writeData();
+		return Response.ok().build();
+	}
+
 	@POST
 	@Path("/addRestaurant")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addRestaurant(Restaurant restaurant) {
 		if(getDataBase().restaurantExist(restaurant.getName())) {
-			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Teritorija already exists\"}").build();
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Restaurant already exists\"}").build();
 		}
 		getDataBase().getRestaurants().put(restaurant.getName(), restaurant);
 		getDataBase().writeData();
 		return Response.ok().build();
 	
+	}
+	@POST
+	@Path("/addVehicle")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addVehicle(Vehicle vehicle) {
+		if(getDataBase().vehicleExist(vehicle.getRegister())) {
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Vehicle already exists\"}").build();
+		}
+		getDataBase().getVehicles().put(vehicle.getRegister(),vehicle);
+		getDataBase().writeData();
+		return Response.ok().build();
 	}
 	
 	
@@ -81,7 +95,7 @@ public class DatabaseService {
 		Database database = (Database) context.getAttribute("database");
 		if (database == null) {
 			database = new Database(context.getRealPath(""));
-			context.setAttribute("customer", database);
+			context.setAttribute("database", database);
 		} 
 		return database;
 	}

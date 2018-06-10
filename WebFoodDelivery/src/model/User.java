@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 public class User implements Serializable{
@@ -13,24 +14,27 @@ public class User implements Serializable{
 	private String password;
 	private String name;
 	private String surname;
-	//	private Role role;
+	private Role role;
 	private String phone;
 	private String email;
-	//private Date dateOfRegistration;
+	private Date dateOfRegistration;
 	
+
+
 	public User() {
 		super();
 	}
 
-	public User(String username, String name, String password, String phone, String email,String surname
-			/*,Date dateOfRegistration*/ ) {
+	public User(String username,String password, String name,String surname, Role role,Date dateOfRegistration,String phone, String email) {
 		super();
 		this.username = username;
 		this.name = name;
 		this.password = password;
 		this.phone = phone;
 		this.email = email;
-	//	this.dateOfRegistration = dateOfRegistration;
+		this.surname=surname;
+		this.role=role;
+		this.dateOfRegistration = dateOfRegistration;
 	}
 
 
@@ -90,5 +94,25 @@ public class User implements Serializable{
 		this.surname = surname;
 	}
 	
-	
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", password=" + password + ", name=" + name + ", surname=" + surname
+				+ ", phone=" + phone + ", email=" + email + "]";
+	}
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Date getDateOfRegistration() {
+		return dateOfRegistration;
+	}
+
+	public void setDateOfRegistration(Date dateOfRegistration) {
+		this.dateOfRegistration = dateOfRegistration;
+	}
 }

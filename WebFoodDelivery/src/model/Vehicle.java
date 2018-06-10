@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class Vehicle {
 
-	private String brand;
-	private String model;
-	private Type tip;
+	private String brand; //fiat
+	private String model;//punto
+	private Type type;
 	private String register;
 	private Date yearOfProduction;
 	private boolean inUse;
@@ -16,13 +16,12 @@ public class Vehicle {
 		super();
 	}
 
-	public Vehicle(String brand, String model, Type tip, String register, Date yearOfProduction, boolean inUse,
+	public Vehicle(String brand, String model, Type type, String register, Date yearOfProduction, boolean inUse,
 			String note) {
 		super();
-		
 		this.brand = brand;
 		this.model = model;
-		this.tip = tip;
+		this.type= type;
 		this.register = register;
 		this.yearOfProduction = yearOfProduction;
 		this.inUse = inUse;
@@ -47,12 +46,12 @@ public class Vehicle {
 		this.model = model;
 	}
 
-	public Type getTip() {
-		return tip;
+	public Type getType() {
+		return type;
 	}
 
-	public void setTip(Type tip) {
-		this.tip = tip;
+	public void setType(Type type) {
+		this.type= type;
 	}
 
 	public String getRegister() {
