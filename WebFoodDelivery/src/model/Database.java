@@ -97,6 +97,47 @@ public class Database {
 		}
 		return false;
 	}
+	
+// trebao sam ove 2 moetode da uradim sa instance off imao bi samo jednu metodu. idiot
+	public boolean foodExist(Article food) {
+		for(Restaurant restaurant : restaurants.values()) {
+			if(restaurant.getFoods().contains(food)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean drinkExist(Article drink) {
+		for(Restaurant restaurant : restaurants.values()) {
+			if(restaurant.getDrinks().contains(drink)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void deleteFood(Article food) {
+		
+		for(Restaurant restaurant : restaurants.values()) {
+			if(restaurant.getFoods().contains(food)) {
+				restaurant.getFoods().remove(food.getId());
+			}
+		}
+	}
+
+
+	public void deleteDrink(Article drink) {
+		for(Restaurant restaurant : restaurants.values()) {
+			if(restaurant.getDrinks().contains(drink)) {
+				restaurant.getDrinks().remove(drink.getId());
+			}
+		}
+		
+	}
+
+
+	
 	public boolean loginCheck(User user) {
 		for(User value : users.values()) {
 			if((value.getUsername()).equalsIgnoreCase(user.getUsername())) {
@@ -126,27 +167,29 @@ public class Database {
 		// TODO Auto-generated method stub
 		JSONObject obj = new JSONObject();
 		JSONArray array = new JSONArray();
-		for(Vehicle vehicle : vehicles.values()) {
-			JSONObject object=new JSONObject();
-			object.put("brand", vehicle.getBrand());
-			object.put("model", vehicle.getModel());
-			object.put("type", vehicle.getType().toString());
-			object.put("register", vehicle.getRegister());
-			object.put("note", vehicle.getNote());
-			DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			object.put("yearOfProduction", dateFormat);
-			object.put("inUse", vehicle.isInUse());
-			array.add(object);
-		}
-		obj.put("vehicles", array);
-		try {
-			FileWriter file = new FileWriter(path+"dummyFiles/vehicles.json");
-			file.write(obj.toString());
-			file.flush();
-			file.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(!getVehicles().isEmpty()) {
+			for(Vehicle vehicle : vehicles.values()) {
+				JSONObject object=new JSONObject();
+				object.put("brand", vehicle.getBrand());
+				object.put("model", vehicle.getModel());
+				object.put("type", vehicle.getType().toString());
+				object.put("register", vehicle.getRegister());
+				object.put("note", vehicle.getNote());
+				DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				object.put("yearOfProduction", dateFormat);
+				object.put("inUse", vehicle.isInUse());
+				array.add(object);
+			}
+			obj.put("vehicles", array);
+			try {
+				FileWriter file = new FileWriter(path+"dummyFiles/vehicles.json");
+				file.write(obj.toString());
+				file.flush();
+				file.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -189,49 +232,50 @@ public class Database {
 		JSONArray arrayFoods = new JSONArray();
 		JSONArray arrayDrinks= new JSONArray();
 		JSONObject obj = new JSONObject();
-		for(Restaurant restaurant : restaurants.values()) {
-			JSONObject object = new JSONObject();
-			object.put("name",restaurant.getName());
-			object.put("adress", restaurant.getAdress());
-			object.put("category", restaurant.getCategory().toString());
-			
-			if(restaurant.getFoods()!=null) {
-				for(Article food : restaurant.getFoods()) {
-					JSONObject objectFood= new JSONObject();
-					objectFood.put("id", food.getId());
-					objectFood.put("name", food.getName());
-					objectFood.put("price", food.getPrice());
-					objectFood.put("description", food.getDescription());
-					objectFood.put("amount", food.getAmount());
-					arrayFoods.add(objectFood);
+		if(!getRestaurants().isEmpty()) {
+			for(Restaurant restaurant : restaurants.values()) {
+				JSONObject object = new JSONObject();
+				object.put("name",restaurant.getName());
+				object.put("adress", restaurant.getAdress());
+				object.put("category", restaurant.getCategory().toString());
+				
+				if(restaurant.getFoods()!=null) {
+					for(Article food : restaurant.getFoods()) {
+						JSONObject objectFood= new JSONObject();
+						objectFood.put("id", food.getId());
+						objectFood.put("name", food.getName());
+						objectFood.put("price", food.getPrice());
+						objectFood.put("description", food.getDescription());
+						objectFood.put("amount", food.getAmount());
+						arrayFoods.add(objectFood);
+					}
 				}
-			}
-			object.put("foods", arrayFoods);
-			if(restaurant.getDrinks()!=null) {
-				for(Article food : restaurant.getFoods()) {
-					JSONObject objectDrinks= new JSONObject();
-					objectDrinks.put("id", food.getId());
-					objectDrinks.put("name", food.getName());
-					objectDrinks.put("price", food.getPrice());
-					objectDrinks.put("description", food.getDescription());
-					objectDrinks.put("amount", food.getAmount());
-					arrayDrinks.add(objectDrinks);
+				object.put("foods", arrayFoods);
+				if(restaurant.getDrinks()!=null) {
+					for(Article food : restaurant.getFoods()) {
+						JSONObject objectDrinks= new JSONObject();
+						objectDrinks.put("id", food.getId());
+						objectDrinks.put("name", food.getName());
+						objectDrinks.put("price", food.getPrice());
+						objectDrinks.put("description", food.getDescription());
+						objectDrinks.put("amount", food.getAmount());
+						arrayDrinks.add(objectDrinks);
+					}
 				}
+				object.put("drinks", arrayDrinks);
+				array.add(object);
 			}
-			object.put("drinks", arrayDrinks);
-			array.add(object);
+			obj.put("restaurants",array);
+			FileWriter file;
+			try {
+				file = new FileWriter(path+"dummyFiles/restaurants.json");
+			    file.write(obj.toString());
+			    file.flush();
+			    file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		obj.put("restaurants",array);
-		FileWriter file;
-		try {
-			file = new FileWriter(path+"dummyFiles/restaurants.json");
-		    file.write(obj.toString());
-		    file.flush();
-		    file.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 	public void readUsers(String path) {
 		JSONParser parser = new JSONParser();
@@ -274,7 +318,7 @@ public class Database {
 	private void readRestaurants(String path2) {
 		JSONParser parser = new JSONParser();
 		  try {
-			Object obj = parser.parse(new FileReader(path + "dummyFiles/users.json"));
+			Object obj = parser.parse(new FileReader(path + "dummyFiles/restaurants.json"));
 			JSONObject jsonObject = (JSONObject) obj;
 	        JSONArray restaurants1 = (JSONArray) jsonObject.get("restaurants");
 			String name = "",adress= "",category="";
@@ -289,17 +333,20 @@ public class Database {
 				JSONArray foods= (JSONArray) restaurant2.get("foods");
 				ArrayList<Article> listFoods= new ArrayList<Article>();
 				
-				String nameOfFood="",description="";
-				int id=0;int price=0;float amount =0;
+				String nameOfFood="",description="",id2,amount2,price2;
+				int id, price;float amount; 
 
 				if(foods!=null) {
 					for(Object food :foods) {
 						JSONObject food1= (JSONObject) food;
-						id=(int) food1.get("id");
+						id2= (String) food1.get("id");
+						id = Integer.parseInt(id2);
 						nameOfFood=(String) food1.get("name");
 						description=(String) food1.get("description");
-						amount=(float) food1.get("amount");
-						price=(int) food1.get("price");
+						amount2=(String) food1.get("amount");
+						amount=Float.parseFloat(amount2);
+						price2=(String) food1.get("price");
+						price=Integer.parseInt(price2);
 						Article foodArticle= new Article(id, nameOfFood, price, description, amount);
 						listFoods.add(foodArticle);
 					}
@@ -311,11 +358,14 @@ public class Database {
 				if(drinks!=null) {
 					for(Object drink :drinks) {
 						JSONObject drink1= (JSONObject) drink;
-						id=(int) drink1.get("id");
+						id2=(String) drink1.get("id");
+						id= Integer.parseInt(id2);
 						nameOfFood=(String) drink1.get("name");
 						description=(String) drink1.get("description");
-						amount=(float) drink1.get("amount");
-						price=(int) drink1.get("price");
+						amount2=(String) drink1.get("amount");
+						amount=Float.parseFloat(amount2);
+						price2=(String) drink1.get("price");
+						price=Integer.parseInt(price2);
 						Article drinkArticle= new Article(id, nameOfFood, price, description, amount);
 						listDrinks.add(drinkArticle);
 					}
@@ -345,15 +395,16 @@ public class Database {
 				obj = parser.parse(new FileReader(path + "dummyFiles/vehicles.json"));
 				JSONObject jsonObject = (JSONObject) obj;
 		        JSONArray vehicles1 = (JSONArray) jsonObject.get("vehicles");
-				String brand = "",model= "",register="",note="",type="",yearOfProduction="";
+				String brand = "",model= "",register="",note="",type="",yearOfProduction="",inUse2;
 				boolean inUse;
-				for (Object vehicle1: vehicles.values()) { 
+				for (Object vehicle1: vehicles1) { 
 					JSONObject vehicle2= (JSONObject) vehicle1;
 					brand=(String) vehicle2.get("brand");
 					model=(String) vehicle2.get("model");
 					register=(String) vehicle2.get("register");
 					note=(String) vehicle2.get("note");
-					inUse=(boolean)vehicle2.get("inUse");
+					inUse2=(String)vehicle2.get("inUse");
+					inUse=Boolean.parseBoolean(inUse2);
 					type=(String) vehicle2.get("type");
 					Type type2=Type.valueOf(type);
 					yearOfProduction=(String) vehicle2.get("yearOfProduction");
@@ -364,13 +415,13 @@ public class Database {
 				
 				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}		
 	}
@@ -387,6 +438,8 @@ public class Database {
 	    }
 	    return date;
 	}
+
+
 
 	
 }

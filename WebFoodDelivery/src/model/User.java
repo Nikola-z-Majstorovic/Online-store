@@ -98,8 +98,10 @@ public class User implements Serializable{
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", name=" + name + ", surname=" + surname
-				+ ", phone=" + phone + ", email=" + email + "]";
+				+ ", role=" + role + ", phone=" + phone + ", email=" + email + ", dateOfRegistration="
+				+ dateOfRegistration + "]";
 	}
+
 	public Role getRole() {
 		return role;
 	}
