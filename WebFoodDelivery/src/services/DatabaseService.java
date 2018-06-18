@@ -13,7 +13,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import model.Article;
 import model.Database;
 import model.Restaurant;
@@ -90,6 +89,58 @@ public class DatabaseService {
 		getDataBase().writeData();
 		return Response.ok().build();
 	}
+	
+	@POST
+	@Path("/addFood")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	private Response addFood(Article food) {
+		if(getDataBase().foodExist(food.getId())) {
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Food already exists\"}").build();
+		}
+		getDataBase().getFoods().put(food.getId(),food);
+		getDataBase().writeData();
+		return Response.ok().build();
+	}
+	@POST
+	@Path("/addDrink")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	private Response addDrink(Article drink) {
+		if(getDataBase().drinkExist(drink.getId())) {
+			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Drink already exists\"}").build();
+		}
+		getDataBase().getDrinks().put(drink.getId(),drink);
+		getDataBase().writeData();
+		return Response.ok().build();
+	}
+	
+	@POST
+	@Path("/modifyUser")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+ 	public Response modifyUser(User user) {
+		if(getDataBase().usernameExists(user.getName())){
+			getDataBase().getUsers().put(user.getUsername(),user);
+			getDataBase().writeData();
+			return Response.ok().build();
+		}
+		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
+	}
+	@POST
+	@Path("/modifyRestaurant")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)	
+	public Response modifyRestaurant(Restaurant restaurant) {
+		if(getDataBase().restaurantExist(restaurant.getName())) {
+			getDataBase().getRestaurants().put(restaurant.getName(), restaurant);
+			getDataBase().writeData();
+			return Response.ok().build();
+		}
+		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
+		
+	}
+	
 	@DELETE
 	@Path("/deleteRestaurant")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -108,8 +159,8 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteFood(Article food) {
-		if(getDataBase().foodExist(food)) {
-			getDataBase().deleteFood(food);
+		if(getDataBase().foodExist(food.getId())) {
+			getDataBase().getFoods().remove(food.getId());
 			getDataBase().writeData();
 			return Response.ok().build();
 		}
@@ -121,14 +172,26 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteDrink(Article drink) {
-		if(getDataBase().drinkExist(drink)) {
-			getDataBase().deleteDrink(drink);
+		if(getDataBase().drinkExist(drink.getId())) {
+			getDataBase().getDrinks().remove(drink.getId());
 			getDataBase().writeData();
 			return Response.ok().build();
 		}
 		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating drink\"}").build();
 	}
-	
+	@POST
+	@Path("/modifyVehicle")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON) 
+	public Response modifyVehicle(Vehicle vehicle)	{
+		if(getDataBase().vehicleExist(vehicle.getRegister())) {
+			getDataBase().getVehicles().put(vehicle.getRegister(),vehicle);
+			getDataBase().writeData();
+			return Response.ok().build();
+		}
+		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Vehicle not found\"}").build();		
+		
+	}
 	@DELETE
 	@Path("/deleteVehicle")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -1,37 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
+
 <head>
-	<meta charset="UTF-8">
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-resource.min.js"></script>
-	<script src="app/main.js"></script>
-	<script src="app/controllers.js"></script>
-	<script src="app/services.js"></script>
-	<link href="css/index.css" rel="stylesheet">
+<!-- 	<link href="css/toast.css" rel="stylesheet" /> -->
+</head> 
 
-</head>
+<body>
 
-<body ng-app="myApp">
-
-	<ul class="navbar">
-		<li><a href="#/">Home</a></li>
-  		<li><a href="#/cinema">Cinema</a></li>
-  		<li><a href="#/theatre">Theatre</a></li>
-  		<li><a href="#/film">Movies</a></li>
-  		<li><a href="#/play">Shows</a></li>
-  		
-  		
-  		<li class="right" ng-style="logIn"><a href="#!signIn">Sign in</a></li>
-  		<li class="right" ng-style="logOut"><a href="#!signUp">Sign up</a></li>
-  		<li class="right" ng-style="account"><a href="#!account">Account</a></li>
-  		<li class="right" ng-style="myTickets"><a href="#!mytickets">My tickets</a></li>
-  		
-    
-  		<li class="right"><a href="funZone.html">Fun zona</a></li>
-	</ul>
+<h3>Web Food Delivery</h3>
+<p>{{2+2}}</p>
 	<div ng-view></div>
-</div>
-	
+
+
+<script src="js/angular.js"></script>
+<script src="js/angular-route.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/toast.js"></script>
+<script src="app/main.js"></script>
+
+
 </body>
 </html>

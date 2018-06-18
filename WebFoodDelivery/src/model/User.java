@@ -77,14 +77,6 @@ public class User implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-//	public Date getDateOfRegistration() {
-//		return dateOfRegistration;
-//	}
-//
-//	public void setDateOfRegistration(Date dateOfRegistration) {
-//		this.dateOfRegistration = dateOfRegistration;
-//	}
 	
 	public String getSurname() {
 		return surname;

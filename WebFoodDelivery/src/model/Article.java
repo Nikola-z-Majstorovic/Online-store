@@ -4,15 +4,15 @@ public class Article {
 
 	private int id;
 	private String name;
-	private int price;
+	private double price;
 	private String description;
-	private float amount;
+	private double amount;
 	
 	public Article() {
 		super();
 	}
 
-	public Article(int id, String name, int price, String description, float amount) {
+	public Article(int id, String name, double price, String description, double amount) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -20,6 +20,8 @@ public class Article {
 		this.description = description;
 		this.amount = amount;
 	}
+
+
 
 	public int getId() {
 		return id;
@@ -37,13 +39,6 @@ public class Article {
 		this.name = name;
 	}
 
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
 
 	public String getDescription() {
 		return description;
@@ -53,14 +48,30 @@ public class Article {
 		this.description = description;
 	}
 
-	public float getAmount() {
+
+
+	public double getPrice() {
+		return price;
+	}
+
+
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+
+
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(float amount) {
+
+
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	
+
 	
 	
 }
