@@ -1,14 +1,10 @@
 package model;
 
-import java.io.Serializable;
+
 import java.util.List;
 
-public class Customer extends User implements Serializable {
+public class Customer extends User  {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private List<Order> orders;
 	private List<Restaurant> favoriteRestaurants;
 	

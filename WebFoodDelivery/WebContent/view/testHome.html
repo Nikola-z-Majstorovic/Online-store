@@ -1,0 +1,96 @@
+<style>
+
+    .restaurant {
+        width: 22%;
+        padding: 5px;
+        margin: 5px;
+        display: inline-block;
+        border: 2px solid green;
+        background-color: gold;
+        color: black;
+    }
+    .article {
+        width: 22%;
+        padding: 5px;
+        margin: 5px;
+        display: inline-block;
+        border: 2px solid green;
+        background-color: aliceblue;
+        color: mediumblue;
+    }
+    .orders {
+        width: 22%;
+        padding: 5px;
+        margin: 5px;
+        display: inline-block;
+        border: 2px solid green;
+        background-color: red;
+        color: white;
+    }
+
+    .ordersToDispatch {
+        width: 22%;
+        padding: 5px;
+        margin: 5px;
+        display: inline-block;
+        border: 2px solid green;
+        color: white;
+    }
+
+    .active {
+        background-color: green;
+    }
+    .delivered {
+        background-color: gray;
+    }
+</style>
+<div>
+    <!-- Restaurants -->
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <div data-ng-show="restaurants.length != 0">Restaurants:</div>
+    <div data-ng-repeat="restaurant in restaurants" class="restaurant">
+        <div>Restaurant Name: {{restaurant.name}}</div>
+        <div>Restaurant Cathegory: {{getRestaurantCathegoryName(restaurant.category).name}}</div>
+        <div>Restaurant Address: {{restaurant.adress}}</div>
+        <button data-ng-click="showMenu(restaurant.id)">Meni</button>
+    </div>
+    <br />
+    <br />
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <div data-ng-show="Articles.length != 0">Menu:</div>
+    <!-- Available articles for selected restaurant -->
+    <div data-ng-repeat="article in Articles" class="article">
+        <div>Article Name: {{article.name}}</div>
+        <div>Article Description: {{article.desription}}</div>
+        <div>Article Type: {{getArticleTypeName(article.typeOfArticle).name}}</div>
+        <div>Article Price: {{article.price}} Din</div>
+        <button data-ng-click="orderArticle(article)">Dodaj u korpu</button>
+    </div>
+    <!-- Order list user - buyer -->
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <div data-ng-show="orderList.length != 0">Your orders:</div>
+    <div data-ng-repeat="order in orderList" class="orders">
+        <div>Article Name: {{order.articleName}}</div>
+        <div>Article Name: {{order.quantity}} x</div>
+        <div>Article Price: {{order.price}}</div>
+        <button data-ng-click="removeOrderFromCart(order)">Remove</button>
+    </div>
+    <div data-ng-show="totalPrice > 0">Total Price: {{totalPrice}}</div>
+    <button data-ng-show="orderList.length > 0" data-ng-click="makeOrder()">Checkout and buy:</button>
+    <!-- Dispatcher orders list user - dispatcher -->
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <div data-ng-repeat="orderForDispatch in dispatcherOrders" class="ordersToDispatch {{orderForDispatch.orderStatus}}">
+        <div>User Address: {{orderForDispatch.userAddress}}</div>
+        <div data-ng-repeat="orderToServe in orderForDispatch.listOfOrders" class="article">
+            <div>Article Name: {{orderToServe.articleName}}</div>
+            <div>Quantity: {{orderToServe.quantity}}</div>
+        </div>
+        <div>Payment to request: {{orderForDispatch.totalToPay}} $</div>
+        <div>Delivered:
+        <select      
+            data-ng-model="orderForDispatch.orderStatus" 
+            data-ng-options="orderStatusOption.value AS orderStatusOption.name in enumDeliveredActive">
+        </select>
+         </div>
+    </div>
+</div>

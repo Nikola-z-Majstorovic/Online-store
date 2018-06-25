@@ -1,15 +1,11 @@
 package model;
 
-import java.io.Serializable;
+
 import java.util.Date;
 
 
-public class User implements Serializable{
+public class User  {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private String username;
 	private String password;
 	private String name;
@@ -17,7 +13,7 @@ public class User implements Serializable{
 	private Role role;
 	private String phone;
 	private String email;
-	private Date dateOfRegistration;
+//	private Date dateOfRegistration;
 	
 
 
@@ -25,7 +21,7 @@ public class User implements Serializable{
 		super();
 	}
 
-	public User(String username,String password, String name,String surname, Role role,Date dateOfRegistration,String phone, String email) {
+	public User(String username,String password,String name,String surname, Role role,/*Date dateOfRegistration,*/String phone, String email) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -34,7 +30,7 @@ public class User implements Serializable{
 		this.email = email;
 		this.surname=surname;
 		this.role=role;
-		this.dateOfRegistration = dateOfRegistration;
+//		this.dateOfRegistration = dateOfRegistration;
 	}
 
 
@@ -90,8 +86,8 @@ public class User implements Serializable{
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + ", name=" + name + ", surname=" + surname
-				+ ", role=" + role + ", phone=" + phone + ", email=" + email + ", dateOfRegistration="
-				+ dateOfRegistration + "]";
+				+ ", role=" + role + ", phone=" + phone + ", email=" + email/* + ", dateOfRegistration="
+				+ dateOfRegistration*/ + "]";
 	}
 
 	public Role getRole() {
@@ -102,11 +98,11 @@ public class User implements Serializable{
 		this.role = role;
 	}
 
-	public Date getDateOfRegistration() {
-		return dateOfRegistration;
-	}
-
-	public void setDateOfRegistration(Date dateOfRegistration) {
-		this.dateOfRegistration = dateOfRegistration;
-	}
+//	public Date getDateOfRegistration() {
+//		return dateOfRegistration;
+//	}
+//
+//	public void setDateOfRegistration(Date dateOfRegistration) {
+//		this.dateOfRegistration = dateOfRegistration;
+//	}
 }

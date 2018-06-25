@@ -1,6 +1,8 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -8,13 +10,20 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import model.Article;
 import model.Database;
+import model.RestArtic;
 import model.Restaurant;
 import model.User;
 import model.Vehicle;
@@ -33,14 +42,35 @@ public class DatabaseService {
 	public Collection<User> getUsers() {
 		return getDataBase().getUsers().values();
 	}
-	
+	@GET
+	@Path("/getRestaurants")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Restaurant> getRestaurants() {
+		return getDataBase().getRestaurants().values();
+
+	}
+	@GET
+	@Path("/getRestArtic")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<RestArtic> getRestArtic() {
+		return getDataBase().getResArtics();
+	}
+	@GET
+	@Path("/getArticles")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Article> getArticles() {
+		return getDataBase().getArticles().values();
+	}
 	@POST
 	@Path("/signIn")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response signIn(User user) {
+	public Response signIn(User user) throws JsonProcessingException {
 		if(getDataBase().loginCheck(user)) {
-			return Response.ok().build();
+			User obj=getDataBase().getUsers().get(user.getUsername());
+			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+			String json = ow.writeValueAsString(obj);
+			return Response.ok(json, MediaType.APPLICATION_JSON).build();
 		}
 		else {
 			return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
@@ -69,10 +99,10 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addRestaurant(Restaurant restaurant) {
-		if(getDataBase().restaurantExist(restaurant.getName())) {
+		if(getDataBase().restaurantExist(restaurant.getId())) {
 			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Restaurant already exists\"}").build();
 		}
-		getDataBase().getRestaurants().put(restaurant.getName(), restaurant);
+		getDataBase().getRestaurants().put(restaurant.getId(), restaurant);
 		getDataBase().writeData();
 		return Response.ok().build();
 	
@@ -89,32 +119,7 @@ public class DatabaseService {
 		getDataBase().writeData();
 		return Response.ok().build();
 	}
-	
-	@POST
-	@Path("/addFood")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	private Response addFood(Article food) {
-		if(getDataBase().foodExist(food.getId())) {
-			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Food already exists\"}").build();
-		}
-		getDataBase().getFoods().put(food.getId(),food);
-		getDataBase().writeData();
-		return Response.ok().build();
-	}
-	@POST
-	@Path("/addDrink")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	private Response addDrink(Article drink) {
-		if(getDataBase().drinkExist(drink.getId())) {
-			return Response.status(Status.CONFLICT).entity("{\"msg\":\"Drink already exists\"}").build();
-		}
-		getDataBase().getDrinks().put(drink.getId(),drink);
-		getDataBase().writeData();
-		return Response.ok().build();
-	}
-	
+		
 	@POST
 	@Path("/modifyUser")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -132,52 +137,13 @@ public class DatabaseService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)	
 	public Response modifyRestaurant(Restaurant restaurant) {
-		if(getDataBase().restaurantExist(restaurant.getName())) {
-			getDataBase().getRestaurants().put(restaurant.getName(), restaurant);
+		if(getDataBase().restaurantExist(restaurant.getId())) {
+			getDataBase().getRestaurants().put(restaurant.getId(), restaurant);
 			getDataBase().writeData();
 			return Response.ok().build();
 		}
 		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"User not found\"}").build();
 		
-	}
-	
-	@DELETE
-	@Path("/deleteRestaurant")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteRestaurant(Restaurant restaurant) {
-		if(getDataBase().restaurantExist(restaurant.getName())) {
-			getDataBase().getRestaurants().remove(restaurant.getName());
-			getDataBase().writeData();
-			return Response.ok().build();
-		}
-		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating Restaurant\"}").build();
-	}
-	
-	@DELETE
-	@Path("/deleteFood")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteFood(Article food) {
-		if(getDataBase().foodExist(food.getId())) {
-			getDataBase().getFoods().remove(food.getId());
-			getDataBase().writeData();
-			return Response.ok().build();
-		}
-		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating food\"}").build();
-	}
-	
-	@DELETE
-	@Path("/deleteDrink")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteDrink(Article drink) {
-		if(getDataBase().drinkExist(drink.getId())) {
-			getDataBase().getDrinks().remove(drink.getId());
-			getDataBase().writeData();
-			return Response.ok().build();
-		}
-		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating drink\"}").build();
 	}
 	@POST
 	@Path("/modifyVehicle")
@@ -193,17 +159,40 @@ public class DatabaseService {
 		
 	}
 	@DELETE
-	@Path("/deleteVehicle")
+	@Path("/deleteRestaurant/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteFood(Vehicle vehicle) {
-		if(getDataBase().vehicleExist(vehicle.getRegister())) {
-			getDataBase().getVehicles().remove(vehicle.getRegister());
+	public Response deleteRestaurant(@PathParam("name")int id ) {
+		if(getDataBase().restaurantExist(id)) {
+			getDataBase().getRestaurants().remove(id);
+			getDataBase().writeData();
+			return Response.ok().build();
+		}
+		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating Restaurant\"}").build();
+	}
+	
+
+
+	@DELETE
+	@Path("/deleteVehicle/{register}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteFood(@PathParam("register") String register) {
+		if(getDataBase().vehicleExist(register)) {
+			getDataBase().getVehicles().remove(register);
 			getDataBase().writeData();
 			return Response.ok().build();
 		}
 		return Response.status(Status.NOT_FOUND).entity("{\"msg\":\"Error updating Vehicle\"}").build();
 	}
+	@GET
+	@Path("/readArticlesFromRestaurant/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Article> readArticlesFromRestaurant(@PathParam("id") int id) {
+		return getDataBase().readArticlesFromRestaurant(id);
+	}
+	
+	
 	private Database getDataBase() {
 		Database database = (Database) context.getAttribute("database");
 		if (database == null) {
@@ -212,5 +201,6 @@ public class DatabaseService {
 		} 
 		return database;
 	}
+	
 
 }

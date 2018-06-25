@@ -7,21 +7,20 @@ public class Article {
 	private double price;
 	private String description;
 	private double amount;
+	private TypeOfArticle typeOfArticle;
 	
 	public Article() {
 		super();
 	}
-
-	public Article(int id, String name, double price, String description, double amount) {
+	public Article(int id, String name, double price, String description, double amount, TypeOfArticle typeOfArticle) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.amount = amount;
+		this.typeOfArticle = typeOfArticle;
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -70,6 +69,18 @@ public class Article {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+
+
+
+	public TypeOfArticle getTypeOfArticle() {
+		return typeOfArticle;
+	}
+
+
+
+	public void setTypeOfArticle(TypeOfArticle typeOfArticle) {
+		this.typeOfArticle = typeOfArticle;
 	}
 
 	

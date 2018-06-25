@@ -19,11 +19,12 @@ import org.json.simple.parser.ParseException;
 public class Database {
 
 	private HashMap<String, User> users = new HashMap<String, User>();
-	private HashMap<String, Restaurant> restaurants =new HashMap<String,Restaurant>();
+	private HashMap<Integer, Restaurant> restaurants =new HashMap<Integer,Restaurant>();
 	private HashMap<String, Vehicle> vehicles =new HashMap<String,Vehicle>();
 	private HashMap<String, Order> orders =new HashMap<String,Order>();
-	private HashMap<Integer, Article> foods= new HashMap<Integer,Article>();
-	private HashMap<Integer, Article> drinks= new HashMap<Integer,Article>();
+	private HashMap<Integer, Article> articles= new HashMap<Integer,Article>();
+	private ArrayList<RestArtic> resArtics= new ArrayList<RestArtic>();
+
 	private String path;
 	
 	public Database() {
@@ -36,12 +37,31 @@ public class Database {
 		this.path = path;
 		readUsers(path);
 		readVehicle(path);
-		readFoods(path);
-		readDrinks(path);
 		readRestaurants(path);
+		readArticles(path);
+		readRestArtic(path);
 	}
 
 
+
+	public ArrayList<RestArtic> getResArtics() {
+		return resArtics;
+	}
+
+
+	public void setResArtics(ArrayList<RestArtic> resArtics) {
+		this.resArtics = resArtics;
+	}
+
+
+	public HashMap<Integer, Restaurant> getRestaurants() {
+		return restaurants;
+	}
+
+
+	public void setRestaurants(HashMap<Integer, Restaurant> restaurants) {
+		this.restaurants = restaurants;
+	}
 
 	public HashMap<String, User> getUsers() {
 		return users;
@@ -49,14 +69,6 @@ public class Database {
 
 	public void setUsers(HashMap<String, User> users) {
 		this.users = users;
-	}
-
-	public HashMap<String, Restaurant> getRestaurants() {
-		return restaurants;
-	}
-
-	public void setRestaurants(HashMap<String, Restaurant> restaurants) {
-		this.restaurants = restaurants;
 	}
 
 
@@ -76,27 +88,16 @@ public class Database {
 		this.vehicles = vehicles;
 	}
 
-	public HashMap<Integer, Article> getFoods() {
-		return foods;
+	public HashMap<Integer, Article> getArticles() {
+		return articles;
 	}
 
 
-	public void setFoods(HashMap<Integer, Article> foods) {
-		this.foods = foods;
+	public void setArticles(HashMap<Integer, Article> articles) {
+		this.articles = articles;
 	}
 
-
-	public HashMap<Integer, Article> getDrinks() {
-		return drinks;
-	}
-
-
-	public void setDrinks(HashMap<Integer, Article> drinks) {
-		this.drinks = drinks;
-	}
-
-
-	//////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 	
 	
 	public boolean usernameExists(String username) {
@@ -115,32 +116,14 @@ public class Database {
 		}
 		return false;
 	}
-	public boolean restaurantExist(String name) {
-		for(String key : restaurants.keySet()) {
-			if(key.equalsIgnoreCase(name));
+	public boolean restaurantExist(int id) {
+		for(int key : restaurants.keySet()) {
+			if(key==id);
 			return true;
 		}
 		return false;
 	}
-	
-
-	public boolean foodExist(int id) {
-		for(Integer id2 : foods.keySet()) {
-			if(id2.intValue() == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-	public boolean drinkExist(int id) {
-		for(Integer id2 : drinks.keySet()) {
-			if(id2.intValue() == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+		
 	public boolean loginCheck(User user) {
 		for(User value : users.values()) {
 			if((value.getUsername()).equalsIgnoreCase(user.getUsername())) {
@@ -162,12 +145,11 @@ public class Database {
 	public void writeData() {
 		writeUsers(this.path);
 		writeVehicles(this.path);
-		writeFoods(this.path);
-		writeDrinks(this.path);
 		writeRestaurants(this.path);
+		writeArticles(this.path);
+		writeResArtic(this.path);
 	}
 	
-
 
 	@SuppressWarnings("unchecked")
 	private void writeVehicles(String path) {
@@ -210,8 +192,9 @@ public class Database {
 			object.put("password",user.getPassword());
 			object.put("name", user.getName());
 			object.put("surname", user.getSurname());
-			DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			object.put("dateOfRegistration", dateFormat.format(user.getDateOfRegistration()));
+//			DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			object.put("dateOfRegistration", dateFormat.format(user.getDateOfRegistration()));
+			if(user.getRole().toString()!=null)
 			object.put("role", user.getRole().toString());
 			object.put("phone", user.getPhone());
 			object.put("email", user.getEmail());
@@ -234,42 +217,18 @@ public class Database {
 	@SuppressWarnings("unchecked")
 	public void writeRestaurants(String path) {
 		JSONArray array = new JSONArray();
-		JSONArray arrayFoods = new JSONArray();
-		JSONArray arrayDrinks= new JSONArray();
 		JSONObject obj = new JSONObject();
 		if(!restaurants.isEmpty()) {
 			for(Restaurant restaurant : restaurants.values()) {
 				JSONObject object = new JSONObject();
+				object.put("id",restaurant.getId());
 				object.put("name",restaurant.getName());
 				object.put("adress", restaurant.getAdress());
 				object.put("category", restaurant.getCategory().toString());
-				
-				if(restaurant.getFoods()!=null) {
-					for(Article food : restaurant.getFoods()) {
-						JSONObject objectFood= new JSONObject();
-						objectFood.put("id", food.getId());
-						objectFood.put("name", food.getName());
-						objectFood.put("price", food.getPrice());
-						objectFood.put("description", food.getDescription());
-						objectFood.put("amount", food.getAmount());
-						arrayFoods.add(objectFood);
-					}
-				}
-				object.put("foods", arrayFoods);
-				if(restaurant.getDrinks()!=null) {
-					for(Article food : restaurant.getDrinks()) {
-						JSONObject objectDrinks= new JSONObject();
-						objectDrinks.put("id", food.getId());
-						objectDrinks.put("name", food.getName());
-						objectDrinks.put("price", food.getPrice());
-						objectDrinks.put("description", food.getDescription());
-						objectDrinks.put("amount", food.getAmount());
-						arrayDrinks.add(objectDrinks);
-					}
-				}
-				object.put("drinks", arrayDrinks);
 				array.add(object);
 			}
+
+		}
 			obj.put("restaurants",array);
 			FileWriter file;
 			try {
@@ -280,69 +239,62 @@ public class Database {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	private void writeArticles(String path2) {
+		JSONArray array = new JSONArray();
+		JSONObject obj = new JSONObject();
+		if(!articles.isEmpty()) {
+			for(Article article: articles.values()) {
+				JSONObject object = new JSONObject();
+				object.put("id", article.getId());
+				object.put("name", article.getName());
+				object.put("price", article.getPrice());
+				object.put("description",article.getDescription());
+				//object.put("artImgPath", article.get);
+				object.put("amount", article.getAmount());
+				object.put("typeOfArticle", article.getTypeOfArticle());
+				array.add(object);
+			}
+			obj.put("articles",array);
+			FileWriter file;
+			try {
+				file = new FileWriter(path+"dummyFiles/articles.json");
+				file.write(obj.toString());
+			    file.flush();
+			    file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void writeDrinks(String path2) {
-		
+	private void writeResArtic(String path2) {
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
-
-		for(Article drink : drinks.values()) {
-			JSONObject object = new JSONObject();
-			object.put("id", drink.getId());
-			object.put("name", drink.getName());
-			object.put("price",drink.getPrice());
-			object.put("description", drink.getDescription());
-			object.put("amount",drink.getAmount());
-			array.add(object);
+		if(!resArtics.isEmpty()) {
+			for(RestArtic restArtic: resArtics) {
+				JSONObject object = new JSONObject();
+				object.put("idR", restArtic.getIdR());
+				object.put("idA", restArtic.getIdA());
+				array.add(object);
+			}	
+			obj.put("restArtic",array);
+			FileWriter file;
+			try {
+				file = new FileWriter(path+"dummyFiles/restArtic.json");
+				file.write(obj.toString());
+			    file.flush();
+			    file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		try {
-			obj.put("drinks", array);
-		    FileWriter file = new FileWriter(path+"dummyFiles/drinks.json");
-		    file.write(obj.toString());
-		    file.flush();
-		    file.close();
-		    
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-		
 	}
 
-
-	@SuppressWarnings("unchecked")
-	private void writeFoods(String path2) {
-		
-		JSONArray array = new JSONArray();
-		JSONObject obj = new JSONObject();
-
-		for(Article food: foods.values()) {
-			JSONObject object = new JSONObject();
-			object.put("id", food.getId());
-			object.put("name", food.getName());
-			object.put("price",food.getPrice());
-			object.put("description", food.getDescription());
-			object.put("amount",food.getAmount());
-			array.add(object);
-		}
-		
-		try {
-			obj.put("drinks", array);
-		    FileWriter file = new FileWriter(path+"dummyFiles/drinks.json");
-		    file.write(obj.toString());
-		    file.flush();
-		    file.close();
-		    
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-		
-	}
-
-	
 	public void readUsers(String path) {
 		JSONParser parser = new JSONParser();
         try {
@@ -364,11 +316,11 @@ public class Database {
 				dateOfRegistration=(String) user2.get("dateOfRegistration");
 				phone= (String) user2.get("phone");
 				email= (String) user2.get("email");
-				User user = new User(username, password, name, surname,role2,convertStringToDate(dateOfRegistration), phone, email);
+				User user = new User(username, password,name,surname,role2,phone,email);
 				if(!users.containsKey(username)) 
 					users.put(username, user);
             }
-            
+           
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -388,36 +340,22 @@ public class Database {
 			JSONObject jsonObject = (JSONObject) obj;
 	        JSONArray restaurants1 = (JSONArray) jsonObject.get("restaurants");
 			String name = "",adress= "",category="";
+			long id=0;
 			
 			for (Object restaurant1 : restaurants1) { 
 				JSONObject restaurant2 = (JSONObject) restaurant1;
+				id= (long) restaurant2.get("id");
 				name = (String) restaurant2.get("name");
 				adress = (String) restaurant2.get("adress");
 				category=(String) restaurant2.get("category");
 				Category category2=Category.valueOf(category);
-
-				JSONArray foods1= (JSONArray) restaurant2.get("foods");
-				ArrayList<Article> listFoods= new ArrayList<Article>();
-				if(foods1!=null) {
-					for(Object food : foods1) {
-						JSONObject food1= (JSONObject) food;
-						listFoods.add(foods.get(food1.get("id")));		
-					}
-	
-					JSONArray drinks1= (JSONArray) restaurant2.get("drinks");
-					ArrayList<Article> listDrinks= new ArrayList<Article>();
-					if(drinks1!=null) {
-						for(Object drink :drinks1) {
-							JSONObject drink1= (JSONObject) drink;
-							listDrinks.add(drinks.get(drink1.get("id")));
-						}
-					}
-					Restaurant restaurant =new Restaurant(name, adress, category2, listFoods, listDrinks);
-					if(!restaurants.containsKey(name)) {
-						restaurants.put(name, restaurant);
+				
+				Restaurant restaurant =new Restaurant((int)id,name, adress, category2);
+					if(!restaurants.containsKey((int)id)) {
+						restaurants.put((int)id, restaurant);
 					}
 				}
-			}
+			
 				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -462,75 +400,109 @@ public class Database {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}		
+	}	
+	private void readArticles(String path2) {
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
+			JSONObject jsonObject = (JSONObject) obj;
+	        JSONArray articles1 = (JSONArray) jsonObject.get("articles");
+	        long id=0;double price=0.0;double amount=0.0;TypeOfArticle typeOfArticle;String typeOfArticle2="";
+	        String name="";String description="";
+	        for (Object article1: articles1) { 
+	        	JSONObject article2= (JSONObject) article1;
+	        	id=(long) article2.get("id");
+	        	name=(String) article2.get("name");
+	        	price=(double) article2.get("price");
+	        	description=(String) article2.get("description");
+	        	amount=(double)article2.get("amount");
+	        	typeOfArticle2=(String) article2.get("typeOfArticle");
+	        	typeOfArticle=TypeOfArticle.valueOf(typeOfArticle2);
+	        	Article article = new Article((int)id, name, price, description, amount, typeOfArticle);
+	        	if(!articles.containsKey(article.getId()))
+	        		articles.put(article.getId(),article);
+	        }
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void readDrinks(String path2) {
-		JSONParser parser = new JSONParser();	
-			Object obj;
-			try {
-				obj = parser.parse(new FileReader(path + "dummyFiles/drinks.json"));
-	            JSONObject jsonObject = (JSONObject) obj;
-	            JSONArray drinks1 = (JSONArray) jsonObject.get("drinks");
-	            
-			    String name = "", description = "";
-			    int id=0;double price=0;double amount;
-	            for (Object drink2 : drinks1) {
-	            	JSONObject drink1 = (JSONObject) drink2;
-			       	id = ((int)(long) drink1.get("id"));			   
-			      	name = (String) drink1.get("name");
-			      	price = (double) drink1.get("price");			      	
-			       	description = (String) drink1.get("description");
-			      	amount = (double) drink1.get("amount");			      	    
-						
-					Article drink= new Article(id, name, price,description,amount);
-					drinks.put(id, drink);
-	            }
-	            
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-            
+	private void readRestArtic(String path2) {
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(new FileReader(path + "dummyFiles/restArtic.json"));
+			JSONObject jsonObject = (JSONObject) obj;
+	        JSONArray restArtics1 = (JSONArray) jsonObject.get("restArtic");
+	        long idR=0; long idA=0;
+	        for (Object restArtic1: restArtics1) { 
+	        	JSONObject restArtic2= (JSONObject) restArtic1;
+	        	idR= (long)restArtic2.get("idR");
+	        	idA= (long)restArtic2.get("idA");
+	        	RestArtic restArtic= new RestArtic((int)idR,(int) idA);
+		        	resArtics.add(restArtic);
+	        }
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
-
-
-	private void readFoods(String path2) {
-		JSONParser parser = new JSONParser();	
-			Object obj;
-			
-			try {
-				obj = parser.parse(new FileReader(path2 + "dummyFiles/foods.json"));
-				JSONObject jsonObject = (JSONObject) obj;
-			    JSONArray foods1 = (JSONArray) jsonObject.get("foods");
-			            
-			    String name = "", description = "";
-			    int id=0;double price=0;double amount=0;
-			            
-			     for (Object food2 : foods1) {
-			      	JSONObject food1 = (JSONObject) food2;
-			       	id = ((int)(long) food1.get("id"));			       	
-			      	name = (String) food1.get("name");
-			      	price = (double) food1.get("price");			      	
-			       	description = (String) food1.get("description");
-			      	amount = (double) food1.get("amount");			      	   
-							
-			       	Article food= new Article(id, name, price,description,amount);
-					foods.put(id, food);
-			     }
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-	         
+	public ArrayList<Article> readArticlesFromRestaurant(int id) {
+		JSONParser parser = new JSONParser();
+		Object obj1,obj2;
+		ArrayList<Article> listOfArticles= new ArrayList<Article>();
+		HashMap<Integer, Integer> idsForArticle= new HashMap<Integer, Integer>();
+		try {
+			obj1 = parser.parse(new FileReader(path + "dummyFiles/restArtic.json"));
+			obj2 = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
+			JSONObject jsonObject1 = (JSONObject) obj1;
+			JSONObject jsonObject2 = (JSONObject) obj2;
+	        JSONArray restArtics1 = (JSONArray) jsonObject1.get("restArtic");
+	        JSONArray articles1 = (JSONArray) jsonObject2.get("articles");
+	        long idR,idA;
+	        String name,description,artImgPath,typeOfArticle2; double price,amount; TypeOfArticle typeOfArticle;
+		        for (Object restArtic1: restArtics1) { 
+		        	JSONObject restArtic2= (JSONObject) restArtic1;
+		        	idR= (long)restArtic2.get("idR");
+		        	idA= (long)restArtic2.get("idA");
+		        	if(id==(int)idR) {
+		        		idsForArticle.put((int)idR,(int) idA);
+		        }
+		        for(Object article1 : articles1) {
+		        	JSONObject article2= (JSONObject) article1;
+		        		idA=(long)article2.get("id");
+		        		for(int idAvalue : idsForArticle.values()) {
+		        				if((int)idA==idAvalue) {
+		        					name=(String)article2.get("name");
+		        					price= (double) article2.get("price");
+		        					description=(String)article2.get("description");
+		        				//	artImgPath=(String)article2.get("artImgPath");
+		        					amount=(double)article2.get("amount");
+		        					typeOfArticle2=(String)article2.get("typeOfArticle");
+		        					typeOfArticle=TypeOfArticle.valueOf(typeOfArticle2);
+		        					Article article= new Article((int)idA, name, price, description, amount, typeOfArticle);
+		        					listOfArticles.add(article);
+		        				}
+		        		}
+		        }
+	        } 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		 return listOfArticles;
 	}
-
 	private Date convertStringToDate(String dateString)
 	{
 	    Date date = null;
@@ -544,10 +516,5 @@ public class Database {
 	    return date;
 	}
 
-
-
-
-
-	
 }
 

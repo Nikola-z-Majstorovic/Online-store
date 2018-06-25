@@ -1,28 +1,21 @@
 package model;
 
-import java.util.ArrayList;
-
 
 public class Restaurant {
 
+	private int id;
 	private String name;
 	private String adress;
 	private Category category;
-	private ArrayList<Article> foods;
-	private ArrayList<Article> drinks;
-	
-	public Restaurant() {
-		super();
-	}
 
-	public Restaurant(String name, String adress, Category category, ArrayList<Article> foods,ArrayList<Article> drinks) {
+	public Restaurant(int id, String name, String adress, Category category) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.adress = adress;
 		this.category = category;
-		this.foods = foods;
-		this.drinks = drinks;
 	}
+
 
 	public String getName() {
 		return name;
@@ -48,20 +41,14 @@ public class Restaurant {
 		this.category = category;
 	}
 
-	public ArrayList<Article> getFoods() {
-		return foods;
+	public int getId() {
+		return id;
 	}
 
-	public void setFoods(ArrayList<Article> foods) {
-		this.foods = foods;
-	}
 
-	public ArrayList<Article> getDrinks() {
-		return drinks;
-	}
 
-	public void setDrinks(ArrayList<Article> drinks) {
-		this.drinks = drinks;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

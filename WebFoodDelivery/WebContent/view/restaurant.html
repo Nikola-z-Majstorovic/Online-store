@@ -1,0 +1,11 @@
+<div>
+<div>
+Restaurant name : {{restaurant.name}} <br>
+Restaurant name : {{restaurant.adress}}
+</div>
+<div data-ng-repeat="article in restaurant.foods">
+Food name : {{article.name}} <br>
+Food price : {{article.price}}<br>
+  	<button data-ng-show="loginuser.role!=''" data-ng-click="orderArticle(restaurant.id,article)">{{article.name}}</button>
+</div>
+</div>

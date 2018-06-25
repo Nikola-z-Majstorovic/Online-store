@@ -1,0 +1,9 @@
+#login .left {
+    float: left;
+    width: 450px;
+}
+
+#login .right {
+    float: left;
+    margin-left: 20px;
+}

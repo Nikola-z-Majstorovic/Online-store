@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+#cinema {
+	height: 300px;
+    width: 300px;
+    text-align:center;
+}
+
+#theatre {
+	height: 300px;
+    width: 300px;
+    text-align:center;
+}
+
+#homeimg {
+	padding: 0;
+	margin-left: auto;
+  	margin-right: auto;
+  	margin-top: 150px;
+  	text-align: center;  	
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+ 		
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+ul.navbar li.right {float: right;}

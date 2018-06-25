@@ -1,20 +1,29 @@
 package model;
 
 import java.util.Date;
-import java.util.List;
 
 
 public class Order {
 
-	
+	private int id;
 	private Date dateOfOrder;
 	private Customer customer;
 	private Deliverer deliverer;
 	private Status status;
 	private boolean delivered;
 	private String note;
-	private List<String> comments;
 	
+	public Order(int id, Date dateOfOrder, Customer customer, Deliverer deliverer, Status status, boolean delivered,
+			String note) {
+		super();
+		this.setId(id);
+		this.dateOfOrder = dateOfOrder;
+		this.customer = customer;
+		this.deliverer = deliverer;
+		this.status = status;
+		this.delivered = delivered;
+		this.note = note;
+	}
 	public Date getDateOfOrder() {
 		return dateOfOrder;
 	}
@@ -51,12 +60,10 @@ public class Order {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	public List<String> getComments() {
-		return comments;
+	public int getId() {
+		return id;
 	}
-	public void setComments(List<String> comments) {
-		this.comments = comments;
+	public void setId(int id) {
+		this.id = id;
 	}
-
-	
 }

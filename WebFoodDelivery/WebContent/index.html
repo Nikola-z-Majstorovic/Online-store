@@ -1,23 +1,72 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<html >
 
 <head>
-<!-- 	<link href="css/toast.css" rel="stylesheet" /> -->
+    <script src="js/angular.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.2/angular-resource.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="app/app.js"></script>
+    <link rel="stylesheet" href="css/home.css" />
+    <script src="js/lodash.min.js"></script>
 </head> 
 
-<body>
+<body data-ng-app="myModule">
+<div>
+	
+ 		<div data-ng-show="loginuser.role == 'common'"> 
+			<ul class="navbar">
+				<li><a href="#/">Home</a></li>
+				
+		  		<li class="right" data-ng-style="SignUp"><a href="#/signUp">Sign Up</a></li>
+		  		<li class="right" data-ng-style="SignIn"><a href="#/signIn">Sing In</a></li>
+			</ul>
+ 		</div> 
+		<div data-ng-show="loginuser.role == 'CUSTOMER'">
+				<ul class="navbar">
+				<li><a href="#/">Home</a></li>
+		  		<li><a href="#/cinema">Favorites</a></li>
+		  		<li><a href="#/theatre">History</a></li>
+		  		<li><a href="#/play">Filter</a></li>
+		  		
+		  		<li class="right" data-ng-style="SignUp"><a data-ng-click="logOut()">Sign out</a></li>
+			</ul>
+		</div>
+		<div data-ng-show="loginuser.role == 'DELIVERER'">
+				<ul class="navbar">
+				<li><a href="#/">Home</a></li>
+		  		<li><a href="#/cinema">Orders</a></li>
+		  		<li><a href="#/theatre">Delivered</a></li>		
+		  		
+		  		<li class="right" data-ng-style="SignUp"><a data-ng-click="logOut()">Sign out</a></li>
 
-<h3>Web Food Delivery</h3>
-<p>{{2+2}}</p>
-	<div ng-view></div>
+		  	</ul>
+		</div>
+		<div data-ng-show="loginuser.role == 'ADMIN'">
+		
+				<ul class="navbar">
+				<li><a href="#/">Home</a></li>
+		  		<li><a href="#/cinema">Add restaurant</a></li>
+		  		<li><a href="#/play">Add vehicle</a></li>
+		  		<li><a href="#/theatre">Filter</a></li>
+		  			  		
+		  		<li class="right" data-ng-style="SignUp"><a href="#/signUp">Delete restaurant</a></li>
+		  		<li class="right" data-ng-style="SignIn"><a href="#/signIn">Delete vehicle</a></li>
+    		  	<li class="right" data-ng-style="SignUp"><a data-ng-click="logOut()">Sign out</a></li>
+			</ul>
+		</div>
+</div>
+	<div data-ng-view></div>
 
 
-<script src="js/angular.js"></script>
-<script src="js/angular-route.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/toast.js"></script>
-<script src="app/main.js"></script>
-
-
+<!-- services -->
+<script src="services/appService.js"></script>
+<script src="services/dataService.js"></script>
+<!--controllers-->
+<script src="controllers/loginCtrl.js"></script>
+<script src="controllers/homeCtrl.js"></script>
+<script src="controllers/regCtrl.js"></script>
+<script src="controllers/restaurantCtrl.js"></script>
+<script src="controllers/testHomeCtrl.js"></script>
 </body>
 </html>
