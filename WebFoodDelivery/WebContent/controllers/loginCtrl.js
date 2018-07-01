@@ -1,20 +1,17 @@
-﻿myModule.controller('loginCtrl', ['$rootScope', '$scope', '$timeout', '$window', 'dataService', function ($rootScope, $scope, $timeout, $window, dataService) {
+﻿myModule.controller('loginCtrl', ['$rootScope', '$scope', '$timeout', '$window', 'dataService','$http', function ($rootScope, $scope, $timeout, $window, dataService,$http) {
     //-----------------------------------------------------------------------------------------------------------
-//    console.log('we are in login ctrl');
+    console.log('we are in login ctrl');
     $scope.errorLogin=false;
-    console.log($rootScope.loginuser);
-    $rootScope.loginuser = {
-        username: "",
-        password: ""
-    };
-    console.log($rootScope.loginuser);
+
+ 
+
     $scope.login = function () {
-                 
+        console.log($rootScope.loginuser);
+
            dataService.login($rootScope.loginuser,function(res) {
-//            	console.log(res);
+            	console.log(res);
             	if(res.status==200){
             		$rootScope.loginuser = res.data;
-//            		console.log($rootScope.loginuser);
             	    $rootScope.changeView('/home');
             	}else {
             		console.log("greska");

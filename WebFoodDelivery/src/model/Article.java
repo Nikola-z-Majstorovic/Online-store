@@ -6,20 +6,28 @@ public class Article {
 	private String name;
 	private double price;
 	private String description;
-	private double amount;
-	private TypeOfArticle typeOfArticle;
-	
+	private String artImgPath;
+	private String quantity;
+	private boolean isFood;
+	private boolean visibility;
+	private int idR;
+		
 	public Article() {
-		super();
+		
 	}
-	public Article(int id, String name, double price, String description, double amount, TypeOfArticle typeOfArticle) {
+	
+	public Article(int id, String name, double price, String description, String artImgPath, String quantity,
+			boolean isFood, boolean visibility, int idR) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.description = description;
-		this.amount = amount;
-		this.typeOfArticle = typeOfArticle;
+		this.artImgPath = artImgPath;
+		this.quantity = quantity;
+		this.isFood = isFood;
+		this.visibility = visibility;
+		this.idR = idR;
 	}
 
 	public int getId() {
@@ -38,7 +46,6 @@ public class Article {
 		this.name = name;
 	}
 
-
 	public String getDescription() {
 		return description;
 	}
@@ -47,42 +54,60 @@ public class Article {
 		this.description = description;
 	}
 
-
-
 	public double getPrice() {
 		return price;
 	}
-
-
 
 	public void setPrice(double price) {
 		this.price = price;
 	}
 
+	public boolean getVisibility() {
+		return visibility;
+	}
+	public void setVisibility(boolean visibility) {
+		this.visibility = visibility;
+	}
 
-
-	public double getAmount() {
-		return amount;
+	public String getArtImgPath() {
+		return artImgPath;
 	}
 
 
-
-	public void setAmount(double amount) {
-		this.amount = amount;
+	public void setArtImgPath(String artImgPath) {
+		this.artImgPath = artImgPath;
 	}
 
-
-
-	public TypeOfArticle getTypeOfArticle() {
-		return typeOfArticle;
+	public int getIdR() {
+		return idR;
 	}
 
-
-
-	public void setTypeOfArticle(TypeOfArticle typeOfArticle) {
-		this.typeOfArticle = typeOfArticle;
+	public void setIdR(int idR) {
+		this.idR = idR;
 	}
 
-	
+	public boolean isFood() {
+		return isFood;
+	}
+
+	public void setFood(boolean isFood) {
+		this.isFood = isFood;
+	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+
+	@Override
+	public String toString() {
+		return "Article [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description
+				+ ", artImgPath=" + artImgPath + ", quantity=" + quantity + ", isFood=" + isFood + ", visibility="
+				+ visibility + ", idR=" + idR + "]";
+	}
+
 	
 }

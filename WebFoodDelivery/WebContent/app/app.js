@@ -1,7 +1,7 @@
 ﻿var myModule = angular.module('myModule', ['ngRoute', 'ngResource']);
 
-myModule.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
-
+myModule.config(['$routeProvider', '$httpProvider','$locationProvider', function ($routeProvider, $httpProvider,$locationProvider) {
+	$locationProvider.hashPrefix('');
     //#region Routes 
     $routeProvider
         .when('/login',
@@ -34,6 +34,19 @@ myModule.config(['$routeProvider', '$httpProvider', function ($routeProvider, $h
                 templateUrl: 'view/testHome.html',
                 resolve: {}
             })
+         .when('/vehicles',
+            {
+                controller: 'vehicleCtrl',
+                templateUrl: 'view/vehicle.html',
+                resolve: {}
+            })
+         .when('/users',
+            {
+                controller: 'userCtrl',
+                templateUrl: 'view/user.html',
+                resolve: {}
+            })
+       
 
 }]);
 
@@ -41,10 +54,9 @@ myModule.run(['$resource', '$rootScope', '$window', '$timeout', '$location', '$r
 
 
     appService.init();
-    $rootScope.changeView('/testHome');
+    $rootScope.changeView('/login');
     //-----------------------------------------------------------------------------------------------------
     $rootScope.$on('$locationChangeStart', function () {
         $rootScope.route = $location.path();
-        console.log($rootScope.route);
     });
 }]);

@@ -1,10 +1,1 @@
-{"articles":[{"id":1,
-"name":"soup",
-"price":10.0,
-"description":"chicken soup",
-"artImgPath": "",
-"amount":1.0,"typeOfArticle":"FOOD"},{"id":2,
-"name":"coca-cola",
-"price":2.0,
-"description":"/",
-"amount":1.0,"typeOfArticle":"DRINK"}]}
+{"articles":[]}

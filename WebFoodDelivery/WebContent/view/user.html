@@ -1,0 +1,44 @@
+<div>
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+
+    <div>Users:</div>
+    <div data-ng-repeat="user in users" class="restaurant">
+    	<div>User Id: {{user.id}}</div>
+		<div>User Role: {{user.role}}</div>
+		<div>User Email: {{user.email}}</div>
+        <div class="modal" data-ng-show="user.Editable == true">
+            <div class="modal-content">
+            <form name="frm" >
+                <span class="close" data-ng-click="exitEditUser()">&times;</span>
+                <label>User Id: {{user.id}}</label><br />
+                <label>User Email: {{user.email}}</label><br />
+                <label>User Role: </label><br />
+                <select name="Role_{{$index}}" required="" id="Role_{{$index}}"
+                    data-ng-model="selectedUser.role" 
+                    data-ng-options="userRole.value as userRole.name for userRole in enumUserRoles">
+                    <option value="">- Please Select -</option>
+                </select>
+                <span class="required" data-ng-show="frm.Role_{{$index}}.$error.required">User role is required</span>  
+                <br />  
+                <br />  
+				<div data-ng-show="selectedUser.role == 'DELIVERER'">
+				<select name="VehicleReg_{{$index}}" data-ng-required="selectedUser.role == 'DELIVERER'" id="VehicleReg_{{$index}}"
+                    data-ng-model="selectedUser.register" 
+                    data-ng-options="vehicle.register as vehicle.register for vehicle in vehicles">
+                    <option value="">- Please Select -</option>
+                </select>
+                <span class="required" data-ng-show="frm.VehicleReg_{{$index}}.$error.required">If user is DELIVERER car is required</span>  
+				</div>
+                <div class="buttons-container">
+                    <button data-ng-click="frm.$invalid || saveUser(selectedUser);" title="Save">Save</button>
+                    <button data-ng-click="exitEditUser()" title="Cancel">Cancel</button>
+                </div>  
+            </div>  
+              
+            </form>  
+            
+                                                        
+        </div>
+		<button data-ng-click="editUser(user.id)">Edit</button>    
+    </div>
+</div>

@@ -8,26 +8,27 @@ public class Vehicle {
 	private String model;//punto
 	private Type type;
 	private String register;
-	private Date yearOfProduction;
+//	private Date yearOfProduction;
 	private boolean inUse;
 	private String note;
+	private boolean visibility;
 	
 	public Vehicle() {
 		super();
 	}
-
-	public Vehicle(String brand, String model, Type type, String register, Date yearOfProduction, boolean inUse,
-			String note) {
+	
+	public Vehicle(String brand, String model, Type type, String register, boolean inUse,
+			String note, boolean visibility) {
 		super();
 		this.brand = brand;
 		this.model = model;
-		this.type= type;
+		this.type = type;
 		this.register = register;
-		this.yearOfProduction = yearOfProduction;
+//		this.yearOfProduction = yearOfProduction;
 		this.inUse = inUse;
 		this.note = note;
+		this.visibility = visibility;
 	}
-
 
 
 	public String getBrand() {
@@ -62,13 +63,13 @@ public class Vehicle {
 		this.register = register;
 	}
 
-	public Date getYearOfProduction() {
-		return yearOfProduction;
-	}
-
-	public void setYearOfProduction(Date yearOfProduction) {
-		this.yearOfProduction = yearOfProduction;
-	}
+//	public Date getYearOfProduction() {
+//		return yearOfProduction;
+//	}
+//
+//	public void setYearOfProduction(Date yearOfProduction) {
+//		this.yearOfProduction = yearOfProduction;
+//	}
 
 	public boolean isInUse() {
 		return inUse;
@@ -85,8 +86,21 @@ public class Vehicle {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
-	
-	
+
+	public boolean getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(boolean visibility) {
+		this.visibility = visibility;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Vehicle [brand=" + brand + ", model=" + model + ", type=" + type + ", register=" + register
+				+ ", inUse=" + inUse + ", note=" + note + ", visibility="
+				+ visibility + "]";
+	}	
 
 }

@@ -1,8 +1,52 @@
 <div>
-  <div data-ng-repeat="restaurant in restaurants">
-	<div>{{restaurant.name}}</div>
-	<div>{{restaurant.adress}}</div>
-	<button data-ng-click="navigateToRestaurant(1)">{{restaurant.name}}</button>
-   </div>
-  	<button data-ng-click="navigateToRestaurant(1)">test restoran</button>
+	<div>
+		Search:<input type="text" placeholder="Restaurant name"
+			data-ng-model="searcher.name" />
+	</div>
+	<br /> <label for="restaurantcathegory">Restaurant Cathegory:</label><br />
+ <select id="restaurantcathegory" name="restaurantcathegory"
+             data-ng-model="searcher.category">
+        <option value="">- Please Select -</option>
+        <option data-ng-repeat="optionRestaurant in enumRestaurantCathegories" value="{{optionRestaurant.value}}">{{optionRestaurant.name}}</option>        
+    </select><br />    
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <button data-ng-click="addRestaurant()" data-ng-if="loginuser.role == 'ADMIN'">Add new restaurant</button>
+	<div>Restaurants:</div>
+    <div data-ng-repeat="restaurant in restaurants | filter: searcher" data-ng-if="restaurant.visibility == true" class="restaurant">
+        <div>Restaurant Name: {{restaurant.name}}</div>
+        <div>Restaurant Cathegory: {{restaurant.category}}</div>
+        <div>Restaurant Address: {{restaurant.adress}}</div>
+        <button data-ng-click="showMenu(restaurant.id)" data-ng-if="loginuser.role == 'CUSTOMER'">Menu</button>
+   		<button data-ng-click="showMenu(restaurant.id)" data-ng-if="loginuser.role == 'ADMIN'">Manage Articles</button>
+          <div class="modal" data-ng-show="restaurant.Editable == true">
+            <div class="modal-content">
+            <form name="frm" >
+                <span class="close" data-ng-click="exitEditRestaurant()">&times;</span>
+                <label>Restaurant name: </label><br />
+                <input style="width: 35%" data-ng-model="selectedRestaurant.name" id="Name_{{$index}}" name="Name_{{$index}}" required="" placeholder="Name"/>
+                <span class="required" data-ng-show="frm.Name_{{$index}}.$error.required">Restaurant name is required</span>  
+                <br />
+                <label>Restaurant adress: </label><br />
+                <input style="width: 35%" data-ng-model="selectedRestaurant.adress" id="Adress_{{$index}}" name="Adress_{{$index}}" required="" placeholder="Adress"/>
+                <span class="required" data-ng-show="frm.Adress_{{$index}}.$error.required">Restaurant adress is required</span>  
+                <br />
+                <label>Restaurant category: </label><br />
+                <select name="Category_{{$index}}" required="" id="Category_{{$index}}"
+                    data-ng-model="selectedRestaurant.category" 
+                    data-ng-options="restaurantCategory.value as restaurantCategory.name for restaurantCategory in enumRestaurantCathegories">
+                    <option value="">- Please Select -</option>
+                </select>
+                <span class="required" data-ng-show="frm.Category_{{$index}}.$error.required">Restaurant category is required</span>  
+                <br />  
+                <div class="buttons-container">
+                    <button data-ng-click="frm.$invalid || saveRestaurant(selectedRestaurant);" title="Save">Save</button>
+                    <button data-ng-click="exitEditRestaurant()" title="Cancel">Cancel</button>
+                </div>  
+            </div>  
+              
+            </form>                                                  
+        </div>
+        <button data-ng-click="editRestaurant(restaurant.id)" data-ng-if="loginuser.role == 'ADMIN'">Edit</button>
+        <button data-ng-click="deleteRestaurant(restaurant)" data-ng-if="loginuser.role == 'ADMIN'">Delete</button>
+    </div>
 </div>

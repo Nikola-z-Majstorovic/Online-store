@@ -4,18 +4,16 @@
         get: function (id) {
             
         },
-        getAll: function (method,param,cb) {
+        getAll: function (ctrl,method,param,cb) {
         	if(param==null) {
-        	var error;
-        	var result =$http.get('/WebFoodDelivery/rest/database/'+ method)
+        	$http.get('/WebFoodDelivery/rest/' +ctrl+ '/'+ method)
             .then(function (response) {
             	cb(response);
             }, function (reason) {
             	cb(reason);
             });
         	}else {
-               	var error;
-            	var result =$http.get('/WebFoodDelivery/rest/database/'+ method+ "/" + param)
+            	$http.get('/WebFoodDelivery/rest/' +ctrl+ '/'+ method+ "/" + param)
                 .then(function (response) {
                 	cb(response);
                 }, function (reason) {
@@ -23,21 +21,35 @@
                 });
         	}
         },
-        create:function(objectToCreate){
-
-        },
-        update:function(objectToUpdate){
-
-        },
-        login: function (user,cb) {
-//        	return $http.get('/WebFoodDelivery/rest/database/getUsers').then(console.log('bingo'), console.log('fail'));
-        	var error;
-        	var result =$http.post('/WebFoodDelivery/rest/database/signIn', user)
+        delete:function(ctrl,method,param,cb){
+        	$http.delete('/WebFoodDelivery/rest/' + ctrl + '/' + method+ "/" + param)
             .then(function (response) {
             	cb(response);
-//                result = response.data;
-//                console.log(response);
-//                console.log(result);
+            }, function (reason) {
+            	cb(reason);
+            });
+        },
+        create:function(ctrl,method,param,cb){
+        	$http.post('/WebFoodDelivery/rest/' + ctrl + '/' + method, param)
+            .then(function (response) {
+            	cb(response);
+            }, function (reason) {
+            	cb(reason);
+            });
+        },
+        update:function(ctrl,method,param,cb){
+
+        	$http.put('/WebFoodDelivery/rest/' +ctrl+ '/'+ method, param)
+            .then(function (response) {
+            	cb(response);
+            }, function (reason) {
+            	cb(reason);
+            });
+        },
+        login: function (user,cb) {
+        	$http.post('/WebFoodDelivery/rest/users/signIn', user)
+            .then(function (response) {
+            	cb(response);
             }, function (reason) {
             	cb(reason);
             });
@@ -45,8 +57,7 @@
         	
         },
         reg : function(user,cb) {
-        	var error;
-        	var result =$http.post('/WebFoodDelivery/rest/database/signUp', user)
+        	$http.post('/WebFoodDelivery/rest/users/signUp', user)
             .then(function (response) {
             	cb(response);
             }, function (reason) {

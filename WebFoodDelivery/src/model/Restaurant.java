@@ -7,13 +7,19 @@ public class Restaurant {
 	private String name;
 	private String adress;
 	private Category category;
-
-	public Restaurant(int id, String name, String adress, Category category) {
+	private boolean visibility;
+	
+	public Restaurant() {
+		
+	}
+	
+	public Restaurant(int id, String name, String adress, Category category, boolean visibility) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.adress = adress;
 		this.category = category;
+		this.visibility = visibility;
 	}
 
 
@@ -45,10 +51,22 @@ public class Restaurant {
 		return id;
 	}
 
-
-
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public boolean getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(boolean visibility) {
+		this.visibility = visibility;
+	}
+
+	@Override
+	public String toString() {
+		return "Restaurant [id=" + id + ", name=" + name + ", adress=" + adress + ", category=" + category
+				+ ", visibility=" + visibility + "]";
 	}
 
 }

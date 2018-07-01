@@ -1,7 +1,7 @@
 ﻿myModule.controller('testHomeCtrl', ['$rootScope', '$scope', '$timeout', '$window', 'appService','dataService','$routeParams', function ($rootScope, $scope, $timeout, $window, appService,dataService,$routeParams) {
     //-----------------------------------------------------------------------------------------------------------
     console.log('we are in home ctrl');
-    dataService.getAll('getRestaurants',null,function(res) {
+    dataService.getAll('restaurant','getRestaurants',null,function(res) {
 //    	console.log(res);
     	if(res.status==200){
     		$rootScope.restaurants= res.data;
@@ -75,7 +75,7 @@
   
         $rootScope.Articles = [];
         $rootScope.selectedRestaurant = restaurantID;
-        dataService.getAll('readArticlesFromRestaurant',/*$routeParams.restaurantId,*/restaurantID,function(res) {
+        dataService.getAll('articles','readArticlesFromRestaurant',/*$routeParams.restaurantId,*/restaurantID,function(res) {
         	if(res.status==200){   	
         		$rootScope.Articles = res.data;
         		console.log(res.data);
@@ -170,5 +170,43 @@
     $scope.getArticleTypeName = function (articleTypeValue) {
         return appService.lodashFindBy($rootScope.enumArticleType, 'value', articleTypeValue);
     };
+    
+    
+    $scope.getCars = function (){
+    	$http.get('/WebFoodDelivery/rest/cars/getcars')
+        .then(function (response) {
+        	console.log("bingo uspeli smo");
+        	console.log(response);
+//            result = response.data;
+//            console.log(response);
+//            console.log(result);
+        }, function (reason) {
+        	console.log("greska nismo prosli");
+        	console.log(reason);
+
+        });
+    }
+    
+    $scope.newCar = {
+    		model: "",
+    		size: ""
+    		
+    }
+    $scope.createNewCar = function (car){
+    	$http.get('/WebFoodDelivery/rest/cars/getcars')
+        .then(function (response) {
+        	console.log("bingo uspeli smo");
+        	console.log(response);
+//            result = response.data;
+//            console.log(response);
+//            console.log(result);
+        }, function (reason) {
+        	console.log("greska nismo prosli");
+        	console.log(reason);
+
+        });
+    }
+    
+    
 }]);
 

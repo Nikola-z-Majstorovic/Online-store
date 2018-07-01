@@ -14,7 +14,7 @@ myModule.controller('regCtrl', ['$rootScope', '$scope', '$timeout', '$window', '
            dataService.reg($scope.regUser,function(res) {
             	console.log(res);
             	if(res.status==200){
-            		console.log(res.data)
+            		$rootScope.loginuser = res.data;
             	    $rootScope.changeView('/home');
             	}else {
             		console.log("greska");

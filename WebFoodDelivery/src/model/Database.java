@@ -18,12 +18,11 @@ import org.json.simple.parser.ParseException;
 
 public class Database {
 
-	private HashMap<String, User> users = new HashMap<String, User>();
+	private HashMap<Integer, User> users = new HashMap<Integer, User>();
 	private HashMap<Integer, Restaurant> restaurants =new HashMap<Integer,Restaurant>();
 	private HashMap<String, Vehicle> vehicles =new HashMap<String,Vehicle>();
-	private HashMap<String, Order> orders =new HashMap<String,Order>();
+	private HashMap<Integer, Order> orders =new HashMap<Integer,Order>();
 	private HashMap<Integer, Article> articles= new HashMap<Integer,Article>();
-	private ArrayList<RestArtic> resArtics= new ArrayList<RestArtic>();
 
 	private String path;
 	
@@ -39,18 +38,7 @@ public class Database {
 		readVehicle(path);
 		readRestaurants(path);
 		readArticles(path);
-		readRestArtic(path);
-	}
-
-
-
-	public ArrayList<RestArtic> getResArtics() {
-		return resArtics;
-	}
-
-
-	public void setResArtics(ArrayList<RestArtic> resArtics) {
-		this.resArtics = resArtics;
+		readOrders(path);
 	}
 
 
@@ -63,23 +51,38 @@ public class Database {
 		this.restaurants = restaurants;
 	}
 
-	public HashMap<String, User> getUsers() {
+
+	
+	public HashMap<Integer, User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(HashMap<String, User> users) {
+
+	public void setUsers(HashMap<Integer, User> users) {
 		this.users = users;
 	}
 
 
-	public HashMap<String, Order> getOrders() {
+	public HashMap<Integer, Order> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(HashMap<String, Order> orders) {
+
+	public void setOrders(HashMap<Integer, Order> orders) {
 		this.orders = orders;
 	}
-	
+
+
+	public String getPath() {
+		return path;
+	}
+
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+
 	public HashMap<String, Vehicle> getVehicles() {
 		return vehicles;
 	}
@@ -101,8 +104,8 @@ public class Database {
 	
 	
 	public boolean usernameExists(String username) {
-	for(String key : users.keySet()) {
-			if(key.equalsIgnoreCase(username)) {
+	for(User user : users.values()) {
+			if(user.getName().equalsIgnoreCase(username)) {
 				return true;
 			}
 		}
@@ -118,19 +121,15 @@ public class Database {
 	}
 	public boolean restaurantExist(int id) {
 		for(int key : restaurants.keySet()) {
-			if(key==id);
+			if(key==id)
 			return true;
 		}
 		return false;
 	}
-		
-	public boolean loginCheck(User user) {
-		for(User value : users.values()) {
-			if((value.getUsername()).equalsIgnoreCase(user.getUsername())) {
-				if(value.getPassword().equalsIgnoreCase(user.getPassword())) {
-					return true;
-				}
-			}
+	public boolean articleExist(int id) {
+		for(int key : articles.keySet()) {
+			if(key==id)
+			return true;
 		}
 		return false;
 	}
@@ -141,53 +140,43 @@ public class Database {
 		}
 		return false;
 	}
+	public boolean orderExist(int id) {
+		for(int key : orders.keySet()) {
+			if(key==id) 
+				return true;
+		}
+		return false;
+	}
+	public boolean loginCheck(User user) {
+		for(User value : users.values()) {
+			if((value.getUsername()).equalsIgnoreCase(user.getUsername())) {
+				if(value.getPassword().equalsIgnoreCase(user.getPassword())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 		
 	public void writeData() {
 		writeUsers(this.path);
 		writeVehicles(this.path);
 		writeRestaurants(this.path);
 		writeArticles(this.path);
-		writeResArtic(this.path);
+		writeOrders(this.path);
 	}
 	
 
 	@SuppressWarnings("unchecked")
-	private void writeVehicles(String path) {
-		JSONObject obj = new JSONObject();
-		JSONArray array = new JSONArray();
-		if(!getVehicles().isEmpty()) {
-			for(Vehicle vehicle : vehicles.values()) {
-				JSONObject object=new JSONObject();
-				object.put("brand", vehicle.getBrand());
-				object.put("model", vehicle.getModel());
-				object.put("type", vehicle.getType().toString());
-				object.put("register", vehicle.getRegister());
-				object.put("note", vehicle.getNote());
-				DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				object.put("yearOfProduction", dateFormat.format(vehicle.getYearOfProduction()));
-				object.put("inUse", vehicle.isInUse());
-				array.add(object);
-			}
-			obj.put("vehicles", array);
-			try {
-				FileWriter file = new FileWriter(path+"dummyFiles/vehicles.json");
-				file.write(obj.toString());
-				file.flush();
-				file.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public void writeUsers(String path) {
+	private void writeUsers(String path) {
 	
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 
 		for(User user : users.values()) {
 			JSONObject object = new JSONObject();
+			object.put("id", user.getId());
 			object.put("username", user.getUsername());
 			object.put("password",user.getPassword());
 			object.put("name", user.getName());
@@ -198,6 +187,7 @@ public class Database {
 			object.put("role", user.getRole().toString());
 			object.put("phone", user.getPhone());
 			object.put("email", user.getEmail());
+			object.put("register",user.getRegister());
 			array.add(object);
 		}
 		
@@ -215,7 +205,36 @@ public class Database {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void writeRestaurants(String path) {
+	private void writeVehicles(String path) {
+		JSONObject obj = new JSONObject();
+		JSONArray array = new JSONArray();
+		if(!getVehicles().isEmpty()) {
+			for(Vehicle vehicle : vehicles.values()) {
+				JSONObject object=new JSONObject();
+				object.put("brand", vehicle.getBrand());
+				object.put("model", vehicle.getModel());
+				object.put("type", vehicle.getType().toString());
+				object.put("register", vehicle.getRegister());
+//				DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				object.put("yearOfProduction", dateFormat.format(vehicle.getYearOfProduction()));
+				object.put("inUse", vehicle.isInUse());
+				object.put("note", vehicle.getNote());
+				object.put("visibility",vehicle.getVisibility());
+				array.add(object);
+			}
+			obj.put("vehicles", array);
+			try {
+				FileWriter file = new FileWriter(path+"dummyFiles/vehicles.json");
+				file.write(obj.toString());
+				file.flush();
+				file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	@SuppressWarnings("unchecked")
+	private void writeRestaurants(String path) {
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 		if(!restaurants.isEmpty()) {
@@ -225,6 +244,7 @@ public class Database {
 				object.put("name",restaurant.getName());
 				object.put("adress", restaurant.getAdress());
 				object.put("category", restaurant.getCategory().toString());
+				object.put("visibility",restaurant.getVisibility());
 				array.add(object);
 			}
 
@@ -243,7 +263,7 @@ public class Database {
 	
 
 	@SuppressWarnings("unchecked")
-	private void writeArticles(String path2) {
+	private void writeArticles(String path) {
 		JSONArray array = new JSONArray();
 		JSONObject obj = new JSONObject();
 		if(!articles.isEmpty()) {
@@ -253,9 +273,11 @@ public class Database {
 				object.put("name", article.getName());
 				object.put("price", article.getPrice());
 				object.put("description",article.getDescription());
-				//object.put("artImgPath", article.get);
-				object.put("amount", article.getAmount());
-				object.put("typeOfArticle", article.getTypeOfArticle());
+				object.put("artImgPath", article.getArtImgPath());
+				object.put("quantity", article.getQuantity());
+				object.put("isFood", article.isFood());
+				object.put("idR",article.getIdR());
+				object.put("visibility", article.getVisibility());
 				array.add(object);
 			}
 			obj.put("articles",array);
@@ -271,31 +293,46 @@ public class Database {
 		}
 	}
 	
+
 	@SuppressWarnings("unchecked")
-	private void writeResArtic(String path2) {
+	private void writeOrders(String path) {
+		JSONObject obj=new JSONObject();
 		JSONArray array = new JSONArray();
-		JSONObject obj = new JSONObject();
-		if(!resArtics.isEmpty()) {
-			for(RestArtic restArtic: resArtics) {
+		JSONArray arrayOrders = new JSONArray();
+		if(!orders.isEmpty()) {
+			for(Order order: orders.values()) {
 				JSONObject object = new JSONObject();
-				object.put("idR", restArtic.getIdR());
-				object.put("idA", restArtic.getIdA());
-				array.add(object);
-			}	
-			obj.put("restArtic",array);
-			FileWriter file;
-			try {
-				file = new FileWriter(path+"dummyFiles/restArtic.json");
-				file.write(obj.toString());
-			    file.flush();
-			    file.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+				object.put("id", order.getId());
+//				object.put("dateOfOrder", order.getDateOfOrder());
+				object.put("idC", order.getIdC());
+				object.put("idD",order.getIdD());
+				object.put("idR", order.getIdR());
+				object.put("status", order.getStatus().toString());
+				object.put("note",order.getNote());
+				object.put("visibility",order.isVisibility());
+				ArrayList<ArticleOrders> articleOrders= order.getArticleOrders();
+				for(ArticleOrders articleOrder : articleOrders) {
+					JSONObject objArtOrd = new JSONObject();
+					objArtOrd.put("idA", articleOrder.getIdA());
+					objArtOrd.put("amount", articleOrder.getAmount());
+					arrayOrders.add(objArtOrd);
+				}
+				object.put("articleOrders", arrayOrders);
+				array.add(object);		
+				}
+			obj.put("orders",array);
+		}
+	    try {
+			FileWriter file = new FileWriter(path+"dummyFiles/orders.json");			
+		    file.write(obj.toString());
+		    file.flush();
+		    file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	public void readUsers(String path) {
+	private void readUsers(String path) {
 		JSONParser parser = new JSONParser();
         try {
             Object obj = parser.parse(new FileReader(path + "dummyFiles/users.json"));
@@ -303,25 +340,29 @@ public class Database {
             JSONArray users1 = (JSONArray) jsonObject.get("users");
             
             String username = "", password = "", name = "", surname = "",
-    				phone = "", email = "",role="",dateOfRegistration="";
-
-            for (Object user1 : users1) {
-            	JSONObject user2 = (JSONObject) user1;
-				username= (String) user2.get("username");
-				password= (String) user2.get("password");
-				name= (String) user2.get("name");
-				surname= (String) user2.get("surname");
-				role=(String) user2.get("role");
-				Role role2=Role.valueOf(role);
-				dateOfRegistration=(String) user2.get("dateOfRegistration");
-				phone= (String) user2.get("phone");
-				email= (String) user2.get("email");
-				User user = new User(username, password,name,surname,role2,phone,email);
-				if(!users.containsKey(username)) 
-					users.put(username, user);
-            }
+    				phone = "", email = "",role="",register="";
+            long id;
+            if(users1!=null) {
+	            for (Object user1 : users1) {
+	            	JSONObject user2 = (JSONObject) user1;
+	            	id=(long) user2.get("id");
+					username= (String) user2.get("username");
+					password= (String) user2.get("password");
+					name= (String) user2.get("name");
+					surname= (String) user2.get("surname");
+					role=(String) user2.get("role");
+					Role role2=Role.valueOf(role);
+//					dateOfRegistration=(String) user2.get("dateOfRegistration");
+					phone= (String) user2.get("phone");
+					email= (String) user2.get("email");
+					register = (String) user2.get("register");
+					User user = new User((int)id, username, password, name, surname, role2, phone, email, register);
+	
+					if(!users.containsKey((int)id)); 
+						users.put((int)id, user);
+	            }
            
-
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -340,22 +381,24 @@ public class Database {
 			JSONObject jsonObject = (JSONObject) obj;
 	        JSONArray restaurants1 = (JSONArray) jsonObject.get("restaurants");
 			String name = "",adress= "",category="";
+			boolean visibility;
 			long id=0;
-			
-			for (Object restaurant1 : restaurants1) { 
-				JSONObject restaurant2 = (JSONObject) restaurant1;
-				id= (long) restaurant2.get("id");
-				name = (String) restaurant2.get("name");
-				adress = (String) restaurant2.get("adress");
-				category=(String) restaurant2.get("category");
-				Category category2=Category.valueOf(category);
-				
-				Restaurant restaurant =new Restaurant((int)id,name, adress, category2);
-					if(!restaurants.containsKey((int)id)) {
-						restaurants.put((int)id, restaurant);
-					}
+			if(restaurants1!=null) {
+				for (Object restaurant1 : restaurants1) { 
+					JSONObject restaurant2 = (JSONObject) restaurant1;
+					visibility= (boolean) restaurant2.get("visibility");
+						id= (long) restaurant2.get("id");
+						name = (String) restaurant2.get("name");
+						adress = (String) restaurant2.get("adress");
+						category=(String) restaurant2.get("category");
+						Category category2=Category.valueOf(category);
+		
+						Restaurant restaurant =new Restaurant((int) id,name, adress, category2,visibility);
+							if(!restaurants.containsKey((int)id)) {
+								restaurants.put((int)id, restaurant);
+							}					
 				}
-			
+			}
 				
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -374,22 +417,25 @@ public class Database {
 				obj = parser.parse(new FileReader(path + "dummyFiles/vehicles.json"));
 				JSONObject jsonObject = (JSONObject) obj;
 		        JSONArray vehicles1 = (JSONArray) jsonObject.get("vehicles");
-				String brand = "",model= "",register="",note="",type="",yearOfProduction="";
-				boolean inUse;
-				for (Object vehicle1: vehicles1) { 
-					JSONObject vehicle2= (JSONObject) vehicle1;
-					brand=(String) vehicle2.get("brand");
-					model=(String) vehicle2.get("model");
-					register=(String) vehicle2.get("register");
-					inUse = (boolean) vehicle2.get("inUse");
-					type=(String) vehicle2.get("type");
-					Type type2=Type.valueOf(type);
-					yearOfProduction=(String) vehicle2.get("yearOfProduction");
-					Vehicle vehicle=new Vehicle(brand, model, type2, register, convertStringToDate(yearOfProduction), inUse, note);
-					if(!vehicles.containsKey(vehicle.getRegister()))
-						vehicles.put(vehicle.getRegister(), vehicle);
+				String brand = "",model= "",register="",note="",type="";
+				boolean inUse;boolean visibility;
+				if(vehicles1!=null) {
+					for (Object vehicle1: vehicles1) { 
+						JSONObject vehicle2= (JSONObject) vehicle1;
+						visibility= (boolean) vehicle2.get("visibility");
+						brand=(String) vehicle2.get("brand");
+						model=(String) vehicle2.get("model");
+						register=(String) vehicle2.get("register");
+						inUse = (boolean) vehicle2.get("inUse");
+						type=(String) vehicle2.get("type");
+						Type type2=Type.valueOf(type);
+//						yearOfProduction=(String) vehicle2.get("yearOfProduction");
+						note= (String) vehicle2.get("note");
+						Vehicle vehicle=new Vehicle(brand, model, type2, register, inUse, note,visibility);
+						if(!vehicles.containsKey(vehicle.getRegister()))
+							vehicles.put(vehicle.getRegister(), vehicle);
+						}					
 				}
-				
 				
 			} catch (FileNotFoundException e) {
 				
@@ -401,28 +447,74 @@ public class Database {
 				e.printStackTrace();
 			}		
 	}	
-	private void readArticles(String path2) {
+	private void readOrders(String path) {
+		JSONParser parser = new JSONParser();
+		ArrayList<ArticleOrders> articleOrders= new ArrayList<ArticleOrders>();
+			try {
+				Object obj = parser.parse(new FileReader(path + "dummyFiles/orders.json"));
+				JSONObject jsonObject = (JSONObject) obj;
+		        JSONArray orders1 = (JSONArray) jsonObject.get("orders");
+		        boolean visibility; long id,idC,idD,idR,idA,amount; String status2,note; Status status;
+				if(orders1!=null) {
+			        for (Object order1: orders1) { 
+					JSONObject order2= (JSONObject) order1;
+					visibility=(boolean)order2.get("visibility");
+						id= (long) order2.get("id");
+//						dateOfOrder=(String) order2.get("dateOfOrder");
+						idC=(long) order2.get("idC");
+						idD=(long) order2.get("idD");
+						status2=(String) order2.get("status");
+						status=Status.valueOf(status2);
+						idR=(long)order2.get("idR");
+						note=(String) order2.get("note");
+				        JSONArray articleOrders1 = (JSONArray) order2.get("articleOrders");
+							for(Object articleOrder1 : articleOrders1) {
+								JSONObject articleOrder2= (JSONObject) articleOrder1;
+								idA=(long)articleOrder2.get("idA");
+								amount=(long)articleOrder2.get("amount");
+								ArticleOrders articleOrders2= new ArticleOrders((int)idA,(int)amount);
+								articleOrders.add(articleOrders2);
+							}
+						Order order = new Order((int)id, (int)idC, (int)idD, (int)idR, status, note, articleOrders, visibility);
+						orders.put((int)id, order);											
+					}
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		
+	}
+
+
+	private void readArticles(String path) {
 		JSONParser parser = new JSONParser();
 		Object obj;
 		try {
 			obj = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
 			JSONObject jsonObject = (JSONObject) obj;
 	        JSONArray articles1 = (JSONArray) jsonObject.get("articles");
-	        long id=0;double price=0.0;double amount=0.0;TypeOfArticle typeOfArticle;String typeOfArticle2="";
-	        String name="";String description="";
-	        for (Object article1: articles1) { 
-	        	JSONObject article2= (JSONObject) article1;
-	        	id=(long) article2.get("id");
-	        	name=(String) article2.get("name");
-	        	price=(double) article2.get("price");
-	        	description=(String) article2.get("description");
-	        	amount=(double)article2.get("amount");
-	        	typeOfArticle2=(String) article2.get("typeOfArticle");
-	        	typeOfArticle=TypeOfArticle.valueOf(typeOfArticle2);
-	        	Article article = new Article((int)id, name, price, description, amount, typeOfArticle);
-	        	if(!articles.containsKey(article.getId()))
-	        		articles.put(article.getId(),article);
-	        }
+	        boolean visibility,isFood;long id,idR;String name,description,artImgPath,quantity;double price;
+		    if(articles1!=null) {
+	        	for (Object article1: articles1) { 
+		        	JSONObject article2= (JSONObject) article1;
+		        	visibility=(boolean) article2.get("visibility");
+		        		id= (long) article2.get("id");
+		        		name= (String) article2.get("name");
+		        		price=(double) article2.get("price");
+		        		description= (String) article2.get("description");
+		        		artImgPath=(String) article2.get("artImgPath");
+		        		quantity= (String) article2.get("quantity");
+		        		isFood=(boolean) article2.get("isFood");
+		        		idR= (long) article2.get("idR");
+		        		Article article = new Article((int)id, name, price, description, artImgPath, quantity, isFood, visibility,(int) idR);
+		        		articles.put((int)id, article);
+		        	
+		        }
+		    }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -430,91 +522,150 @@ public class Database {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-	}
 
-	private void readRestArtic(String path2) {
-		JSONParser parser = new JSONParser();
-		Object obj;
-		try {
-			obj = parser.parse(new FileReader(path + "dummyFiles/restArtic.json"));
-			JSONObject jsonObject = (JSONObject) obj;
-	        JSONArray restArtics1 = (JSONArray) jsonObject.get("restArtic");
-	        long idR=0; long idA=0;
-	        for (Object restArtic1: restArtics1) { 
-	        	JSONObject restArtic2= (JSONObject) restArtic1;
-	        	idR= (long)restArtic2.get("idR");
-	        	idA= (long)restArtic2.get("idA");
-	        	RestArtic restArtic= new RestArtic((int)idR,(int) idA);
-		        	resArtics.add(restArtic);
-	        }
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 	}
 	public ArrayList<Article> readArticlesFromRestaurant(int id) {
 		JSONParser parser = new JSONParser();
-		Object obj1,obj2;
+		Object obj1;
 		ArrayList<Article> listOfArticles= new ArrayList<Article>();
-		HashMap<Integer, Integer> idsForArticle= new HashMap<Integer, Integer>();
 		try {
-			obj1 = parser.parse(new FileReader(path + "dummyFiles/restArtic.json"));
-			obj2 = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
+			obj1 = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
 			JSONObject jsonObject1 = (JSONObject) obj1;
-			JSONObject jsonObject2 = (JSONObject) obj2;
-	        JSONArray restArtics1 = (JSONArray) jsonObject1.get("restArtic");
-	        JSONArray articles1 = (JSONArray) jsonObject2.get("articles");
-	        long idR,idA;
-	        String name,description,artImgPath,typeOfArticle2; double price,amount; TypeOfArticle typeOfArticle;
-		        for (Object restArtic1: restArtics1) { 
-		        	JSONObject restArtic2= (JSONObject) restArtic1;
-		        	idR= (long)restArtic2.get("idR");
-		        	idA= (long)restArtic2.get("idA");
-		        	if(id==(int)idR) {
-		        		idsForArticle.put((int)idR,(int) idA);
-		        }
-		        for(Object article1 : articles1) {
-		        	JSONObject article2= (JSONObject) article1;
-		        		idA=(long)article2.get("id");
-		        		for(int idAvalue : idsForArticle.values()) {
-		        				if((int)idA==idAvalue) {
-		        					name=(String)article2.get("name");
-		        					price= (double) article2.get("price");
-		        					description=(String)article2.get("description");
-		        				//	artImgPath=(String)article2.get("artImgPath");
-		        					amount=(double)article2.get("amount");
-		        					typeOfArticle2=(String)article2.get("typeOfArticle");
-		        					typeOfArticle=TypeOfArticle.valueOf(typeOfArticle2);
-		        					Article article= new Article((int)idA, name, price, description, amount, typeOfArticle);
-		        					listOfArticles.add(article);
-		        				}
-		        		}
-		        }
-	        } 
+			 JSONArray articles1 = (JSONArray) jsonObject1.get("articles");
+			 long idA;String name="",description="",artImgPath="",quantity="";double price; boolean visibility,isFood;long idR;
+			 if(articles1!=null) {
+			 for (Object article1: articles1) {
+		        JSONObject article2= (JSONObject) article1;
+		        idR=(long)article2.get("idR");
+		        if(idR==id) {
+		        	visibility= (boolean) article2.get("visibility");
+		        	idA= (long) article2.get("id");
+		        	name=(String) article2.get("name");
+		        	price=(double) article2.get("price");
+		        	description= (String) article2.get("description");
+		        	artImgPath=(String) article2.get("artImgPath");
+		        	quantity= (String) article2.get("quantity");
+		        	isFood=(boolean) article2.get("isFood");
+		        	idR= (long) article2.get("idR");
+		        	Article article =  new Article((int)idA, name, price, description,artImgPath,quantity, isFood, visibility, (int)idR);
+		        	listOfArticles.add(article);
+		        	
+		        } 		      
+			 }
+		   }
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {			
+		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		 return listOfArticles;
+		return listOfArticles;
 	}
-	private Date convertStringToDate(String dateString)
-	{
-	    Date date = null;
-	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    try{
-	        date = df.parse(dateString);
-	    }
-	    catch ( Exception ex ){
-	        System.out.println(ex);
-	    }
-	    return date;
+
+	public ArrayList<Restaurant> readRestaurantFromArticle(int id) {
+		JSONParser parser = new JSONParser();
+		Object obj1,obj2;
+		ArrayList<Restaurant> listOfRestaurants=new ArrayList<Restaurant>();
+		try {
+			obj1 = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
+			obj2 = parser.parse(new FileReader(path + "dummyFiles/restaurants.json"));
+			JSONObject jsonObject1 = (JSONObject) obj1;
+			JSONObject jsonObject2 = (JSONObject) obj2;
+			JSONArray articles1 = (JSONArray) jsonObject1.get("articles");
+			JSONArray restaurants1 = (JSONArray) jsonObject2.get("restaurants");
+			long idR;String name,adress,category2;boolean visibility;Category category;
+			if(articles1!=null) {
+				for (Object article1: articles1) {
+				    JSONObject article2= (JSONObject) article1;
+				    idR=(long) article2.get("idR");
+				    if(idR==id) {
+				    	if(restaurants1!=null) {
+				    	for(Object restaurant1 : restaurants1) {
+						    JSONObject restaurant2= (JSONObject) restaurant1;
+						    idR=(long) restaurant2.get("id");
+						    if(idR==id) {
+						    	name= (String) restaurant2.get("name");
+						    	adress= (String) restaurant2.get("adress");
+						    	category2= (String) restaurant2.get("category");
+						    	category= Category.valueOf(category2);
+						    	visibility = (boolean) restaurant2.get("visibility");
+						    	Restaurant restaurant = new Restaurant((int)id,name, adress, category, visibility);
+						    	listOfRestaurants.add(restaurant);
+						    }
+				    	}
+				    }
+				   }
+				 }
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return listOfRestaurants;
 	}
+
+	
+	
+	
+//	private Date convertStringToDate(String dateString)
+//	{
+//	    Date date = null;
+//	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//	    try{
+//	        date = df.parse(dateString);
+//	    }
+//	    catch ( Exception ex ){
+//	        System.out.println(ex);
+//	    }
+//	    return date;
+//	}	
+	
+	public void deleteRestaurant(int id) {
+		if(restaurantExist(id)) {
+			for(Restaurant restaurant: restaurants.values()) {
+				if(restaurant.getId()==id) {
+					restaurant.setVisibility(false);
+				}
+			}
+		}
+	}
+	public void deleteArticle(int id) {
+		if(articleExist(id)) {
+			for(Article article : articles.values()) {
+				if(article.getId()==id) {
+					article.setVisibility(false);
+				}
+			}
+		}
+	}
+	public void deleteVehicle(String register) {
+		if(vehicleExist(register)) {
+			for(Vehicle vehicle : vehicles.values()) {
+				if(vehicle.getRegister().equalsIgnoreCase(register)) {
+					vehicle.setVisibility(false);
+				}
+			}
+		}
+	}
+
+
+	public void deleteOrder(int id) {
+		if(orderExist(id)) {
+			for(Order order: orders.values()) {
+				if(order.getId()==id) {
+					order.setVisibility(false);
+				}
+			}
+		}
+		
+	}
+
+
+	
 
 }
 

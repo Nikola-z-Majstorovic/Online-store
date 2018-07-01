@@ -1,11 +1,9 @@
 package model;
 
+public class User{
 
-import java.util.Date;
 
-
-public class User  {
-
+	private int id;
 	private String username;
 	private String password;
 	private String name;
@@ -14,30 +12,34 @@ public class User  {
 	private String phone;
 	private String email;
 //	private Date dateOfRegistration;
+	private String register;
 	
-
-
-	public User() {
+	public User()   {
 		super();
 	}
 
-	public User(String username,String password,String name,String surname, Role role,/*Date dateOfRegistration,*/String phone, String email) {
+
+	public User(int id, String username, String password, String name, String surname, Role role, String phone,
+			String email, String register) {
 		super();
+		this.id = id;
 		this.username = username;
-		this.name = name;
 		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.role = role;
 		this.phone = phone;
 		this.email = email;
-		this.surname=surname;
-		this.role=role;
-//		this.dateOfRegistration = dateOfRegistration;
+		this.setRegister(register);
 	}
+
+
 
 
 	public String getUsername() {
 		return username;
 	}
-
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -81,13 +83,12 @@ public class User  {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	
+
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + password + ", name=" + name + ", surname=" + surname
-				+ ", role=" + role + ", phone=" + phone + ", email=" + email/* + ", dateOfRegistration="
-				+ dateOfRegistration*/ + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", role=" + role + ", phone=" + phone + ", email=" + email + ", register=" + register + "]";
 	}
 
 	public Role getRole() {
@@ -105,4 +106,27 @@ public class User  {
 //	public void setDateOfRegistration(Date dateOfRegistration) {
 //		this.dateOfRegistration = dateOfRegistration;
 //	}
+//
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+	public String getRegister() {
+		return register;
+	}
+
+
+	public void setRegister(String register) {
+		this.register = register;
+	}
+
+
+
+
+	
 }

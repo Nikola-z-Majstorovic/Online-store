@@ -2,5 +2,5 @@ package model;
 
 public enum Type {
 
-	Bycicle,Scooter,Car
+	Bycicle,Scooter,Car,Nothing
 }

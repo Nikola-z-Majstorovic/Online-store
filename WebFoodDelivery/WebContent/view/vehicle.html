@@ -1,0 +1,55 @@
+<div>
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <button data-ng-click="addVehicle()">Add new vehicle</button>
+    <div data-ng-show="vehicles.length != 0">Vehicles:</div>
+    <div data-ng-repeat="vehicle in vehicles" data-ng-if="vehicle.visibility == true" class="restaurant">
+    	<div>Vehicle Register: {{vehicle.register}}</div>
+        <div>Vehicle Brand: {{vehicle.brand}}</div>
+        <div>Vehicle Model: {{vehicle.model}}</div>
+        <div>Vehicle Type: {{vehicle.type}}</div>
+        <div>Vehicle in use: {{vehicle.inUse ? "Yes" : "No"}}</div>
+        <div>Vehicle's note: {{vehicle.note}}</div>
+
+        <div class="modal" data-ng-show="vehicle.Editable == true">
+            <div class="modal-content">
+            <form name="frm" > 
+                <span class="close" data-ng-click="exitEditVehicle()">&times; </span>
+                <div data-ng-show="status!='update'"><label>Vehicle Register: </label><br />
+                <input style="width: 35%" data-ng-model="selectedVehicle.register" id="Register_{{$index}}" name="Register_{{$index}}" required="" placeholder="Register"/>
+                <span class="required" data-ng-show="frm.Register_{{$index}}.$error.required">Vehicle register is required</span>  
+                <br />
+                </div>
+                <label>Vehicle Brand: </label><br />
+                <input style="width: 35%" data-ng-model="selectedVehicle.brand" id="Brand_{{$index}}" name="Brand_{{$index}}" required="" placeholder="Brand"/>
+                <span class="required" data-ng-show="frm.Brand_{{$index}}.$error.required">Vehicle brand is required</span>  
+                <br />
+                <label>Vehicle Model: </label><br />
+                <input style="width: 35%" data-ng-model="selectedVehicle.model" id="Model_{{$index}}" name="Model_{{$index}}" required="" placeholder="Model"/>
+                <span class="required" data-ng-show="frm.Model_{{$index}}.$error.required">Vehicle model is required</span>  
+                <br />
+                <label>Vehicle Type: </label><br />
+                <select name="Type_{{$index}}" required="" id="Type_{{$index}}"
+                    data-ng-model="selectedVehicle.type" 
+                    data-ng-options="vehicleType.value as vehicleType.name for vehicleType in enumVehicleTypes">
+                    <option value="">- Please Select -</option>
+                </select>
+                <span class="required" data-ng-show="frm.Type_{{$index}}.$error.required">Vehicle type is required</span>  
+                <br />  
+                <label>Vehicle Note: </label><br />
+                <input style="width: 35%" data-ng-model="selectedVehicle.note" id="Note_{{$index}}" name="Note_{{$index}}" placeholder="Note"/>     
+                <br />
+                <div class="buttons-container">
+                    <button data-ng-click="frm.$invalid || saveVehicle(selectedVehicle);" title="Save">Save</button>
+                    <button data-ng-click="exitEditVehicle()" title="Cancel">Cancel</button>
+                </div>  
+            </div>  
+              
+            </form>                                                  
+        </div>
+
+        <button data-ng-click="editVehicle(vehicle.register)">Edit</button>
+        <button data-ng-click="deleteVehicle(vehicle)">Delete</button>
+
+
+    </div>
+</div>
