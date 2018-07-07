@@ -4,10 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import org.json.simple.JSONArray;
@@ -181,13 +180,14 @@ public class Database {
 			object.put("password",user.getPassword());
 			object.put("name", user.getName());
 			object.put("surname", user.getSurname());
-//			DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			object.put("dateOfRegistration", dateFormat.format(user.getDateOfRegistration()));
+			String timeStamp = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss").format(Calendar.getInstance().getTime());
+			object.put("dateOfRegistration",user.getDateOfRegistration());
 			if(user.getRole().toString()!=null)
 			object.put("role", user.getRole().toString());
 			object.put("phone", user.getPhone());
 			object.put("email", user.getEmail());
 			object.put("register",user.getRegister());
+			object.put("myFavoriteRestaurants", user.getMyFavoriteRestaurants());
 			array.add(object);
 		}
 		
@@ -215,8 +215,8 @@ public class Database {
 				object.put("model", vehicle.getModel());
 				object.put("type", vehicle.getType().toString());
 				object.put("register", vehicle.getRegister());
-//				DateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//				object.put("yearOfProduction", dateFormat.format(vehicle.getYearOfProduction()));
+//				String timeStamp = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss").format(Calendar.getInstance().getTime());
+				object.put("yearOfProduction", vehicle.getYearOfProduction());
 				object.put("inUse", vehicle.isInUse());
 				object.put("note", vehicle.getNote());
 				object.put("visibility",vehicle.getVisibility());
@@ -278,6 +278,7 @@ public class Database {
 				object.put("isFood", article.isFood());
 				object.put("idR",article.getIdR());
 				object.put("visibility", article.getVisibility());
+				object.put("articleRanking", article.getArticleRanking());
 				array.add(object);
 			}
 			obj.put("articles",array);
@@ -298,23 +299,28 @@ public class Database {
 	private void writeOrders(String path) {
 		JSONObject obj=new JSONObject();
 		JSONArray array = new JSONArray();
-		JSONArray arrayOrders = new JSONArray();
 		if(!orders.isEmpty()) {
 			for(Order order: orders.values()) {
 				JSONObject object = new JSONObject();
 				object.put("id", order.getId());
-//				object.put("dateOfOrder", order.getDateOfOrder());
+//				String timeStamp = new SimpleDateFormat("yyyy:MM:dd-HH:mm:ss").format(Calendar.getInstance().getTime());
+				object.put("dateOfOrder",order.getDateOfOrder());
 				object.put("idC", order.getIdC());
 				object.put("idD",order.getIdD());
 				object.put("idR", order.getIdR());
 				object.put("status", order.getStatus().toString());
 				object.put("note",order.getNote());
 				object.put("visibility",order.isVisibility());
+				object.put("price",order.getPrice());
 				ArrayList<ArticleOrders> articleOrders= order.getArticleOrders();
+				JSONArray arrayOrders = new JSONArray();
 				for(ArticleOrders articleOrder : articleOrders) {
 					JSONObject objArtOrd = new JSONObject();
+
 					objArtOrd.put("idA", articleOrder.getIdA());
 					objArtOrd.put("amount", articleOrder.getAmount());
+					objArtOrd.put("name",articleOrder.getName());
+					objArtOrd.put("priceByUnit",articleOrder.getPriceByUnit());
 					arrayOrders.add(objArtOrd);
 				}
 				object.put("articleOrders", arrayOrders);
@@ -337,11 +343,10 @@ public class Database {
         try {
             Object obj = parser.parse(new FileReader(path + "dummyFiles/users.json"));
             JSONObject jsonObject = (JSONObject) obj;
-            JSONArray users1 = (JSONArray) jsonObject.get("users");
-            
+            JSONArray users1 = (JSONArray) jsonObject.get("users");      
             String username = "", password = "", name = "", surname = "",
-    				phone = "", email = "",role="",register="";
-            long id;
+    				phone = "", email = "",role="",register="",dateOfRegistration;
+            long id;String[] numbers = null;
             if(users1!=null) {
 	            for (Object user1 : users1) {
 	            	JSONObject user2 = (JSONObject) user1;
@@ -352,11 +357,22 @@ public class Database {
 					surname= (String) user2.get("surname");
 					role=(String) user2.get("role");
 					Role role2=Role.valueOf(role);
-//					dateOfRegistration=(String) user2.get("dateOfRegistration");
+					dateOfRegistration=(String) user2.get("dateOfRegistration");
 					phone= (String) user2.get("phone");
 					email= (String) user2.get("email");
 					register = (String) user2.get("register");
-					User user = new User((int)id, username, password, name, surname, role2, phone, email, register);
+		            JSONArray favoriteRestaurants = (JSONArray) jsonObject.get("myFavoriteRestaurants");
+
+		            if(favoriteRestaurants != null) {
+		            	if(favoriteRestaurants.size() > 0) {
+		            		numbers = new String[favoriteRestaurants.size()];
+			            	for(int i=0;i<favoriteRestaurants.size();i++) {
+				          		numbers[i]=	(String) favoriteRestaurants.get(i);
+				            }
+		            	}
+		            }
+		    
+					User user = new User((int)id, username, password, name, surname, role2, phone, email, dateOfRegistration,register,numbers);
 	
 					if(!users.containsKey((int)id)); 
 						users.put((int)id, user);
@@ -417,7 +433,7 @@ public class Database {
 				obj = parser.parse(new FileReader(path + "dummyFiles/vehicles.json"));
 				JSONObject jsonObject = (JSONObject) obj;
 		        JSONArray vehicles1 = (JSONArray) jsonObject.get("vehicles");
-				String brand = "",model= "",register="",note="",type="";
+				String brand = "",model= "",register="",note="",type="",yearOfProduction;
 				boolean inUse;boolean visibility;
 				if(vehicles1!=null) {
 					for (Object vehicle1: vehicles1) { 
@@ -429,16 +445,15 @@ public class Database {
 						inUse = (boolean) vehicle2.get("inUse");
 						type=(String) vehicle2.get("type");
 						Type type2=Type.valueOf(type);
-//						yearOfProduction=(String) vehicle2.get("yearOfProduction");
+						yearOfProduction=(String) vehicle2.get("yearOfProduction");
 						note= (String) vehicle2.get("note");
-						Vehicle vehicle=new Vehicle(brand, model, type2, register, inUse, note,visibility);
+						Vehicle vehicle=new Vehicle(brand, model, type2, register,yearOfProduction, inUse, note,visibility);
 						if(!vehicles.containsKey(vehicle.getRegister()))
 							vehicles.put(vehicle.getRegister(), vehicle);
 						}					
 				}
 				
-			} catch (FileNotFoundException e) {
-				
+			} catch (FileNotFoundException e) {		
 				e.printStackTrace();
 			} catch (IOException e) {
 
@@ -449,33 +464,38 @@ public class Database {
 	}	
 	private void readOrders(String path) {
 		JSONParser parser = new JSONParser();
-		ArrayList<ArticleOrders> articleOrders= new ArrayList<ArticleOrders>();
+		
 			try {
 				Object obj = parser.parse(new FileReader(path + "dummyFiles/orders.json"));
 				JSONObject jsonObject = (JSONObject) obj;
 		        JSONArray orders1 = (JSONArray) jsonObject.get("orders");
-		        boolean visibility; long id,idC,idD,idR,idA,amount; String status2,note; Status status;
+		        boolean visibility; long id,idC,idR,idA,amount; String status2,note,idD; Status status;
+		        String name,dateOfOrder;double priceByUnit,price; 
 				if(orders1!=null) {
 			        for (Object order1: orders1) { 
 					JSONObject order2= (JSONObject) order1;
 					visibility=(boolean)order2.get("visibility");
 						id= (long) order2.get("id");
-//						dateOfOrder=(String) order2.get("dateOfOrder");
-						idC=(long) order2.get("idC");
-						idD=(long) order2.get("idD");
+						dateOfOrder=(String) order2.get("dateOfOrder");
+						idC=(long) order2.get("idC");						
+						idD=(String) order2.get("idD");
 						status2=(String) order2.get("status");
 						status=Status.valueOf(status2);
 						idR=(long)order2.get("idR");
 						note=(String) order2.get("note");
+						price=(double)order2.get("price");
+						ArrayList<ArticleOrders> articleOrders= new ArrayList<ArticleOrders>();
 				        JSONArray articleOrders1 = (JSONArray) order2.get("articleOrders");
 							for(Object articleOrder1 : articleOrders1) {
 								JSONObject articleOrder2= (JSONObject) articleOrder1;
 								idA=(long)articleOrder2.get("idA");
 								amount=(long)articleOrder2.get("amount");
-								ArticleOrders articleOrders2= new ArticleOrders((int)idA,(int)amount);
+								name=(String) articleOrder2.get("name");
+								priceByUnit=(double) articleOrder2.get("priceByUnit");
+								ArticleOrders articleOrders2= new ArticleOrders((int)idA,(int)amount,name,priceByUnit);
 								articleOrders.add(articleOrders2);
 							}
-						Order order = new Order((int)id, (int)idC, (int)idD, (int)idR, status, note, articleOrders, visibility);
+						Order order = new Order((int)id, dateOfOrder,(int)idC, idD, (int)idR, status, note, articleOrders, visibility,price);
 						orders.put((int)id, order);											
 					}
 				}
@@ -497,7 +517,7 @@ public class Database {
 			obj = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
 			JSONObject jsonObject = (JSONObject) obj;
 	        JSONArray articles1 = (JSONArray) jsonObject.get("articles");
-	        boolean visibility,isFood;long id,idR;String name,description,artImgPath,quantity;double price;
+	        boolean visibility,isFood;long id,articleRanking,idR;String name,description,artImgPath,quantity;double price;
 		    if(articles1!=null) {
 	        	for (Object article1: articles1) { 
 		        	JSONObject article2= (JSONObject) article1;
@@ -510,7 +530,8 @@ public class Database {
 		        		quantity= (String) article2.get("quantity");
 		        		isFood=(boolean) article2.get("isFood");
 		        		idR= (long) article2.get("idR");
-		        		Article article = new Article((int)id, name, price, description, artImgPath, quantity, isFood, visibility,(int) idR);
+		        		articleRanking=(long) article2.get("articleRanking");
+		        		Article article = new Article((int)id, name, price, description, artImgPath, quantity, isFood, visibility,(int) idR,(int)articleRanking);
 		        		articles.put((int)id, article);
 		        	
 		        }
@@ -532,7 +553,7 @@ public class Database {
 			obj1 = parser.parse(new FileReader(path + "dummyFiles/articles.json"));
 			JSONObject jsonObject1 = (JSONObject) obj1;
 			 JSONArray articles1 = (JSONArray) jsonObject1.get("articles");
-			 long idA;String name="",description="",artImgPath="",quantity="";double price; boolean visibility,isFood;long idR;
+			 long idA;String name="",description="",artImgPath="",quantity="";double price; boolean visibility,isFood;long idR,articleRanking;
 			 if(articles1!=null) {
 			 for (Object article1: articles1) {
 		        JSONObject article2= (JSONObject) article1;
@@ -547,7 +568,8 @@ public class Database {
 		        	quantity= (String) article2.get("quantity");
 		        	isFood=(boolean) article2.get("isFood");
 		        	idR= (long) article2.get("idR");
-		        	Article article =  new Article((int)idA, name, price, description,artImgPath,quantity, isFood, visibility, (int)idR);
+		        	articleRanking= (long) article2.get("articleRanking");
+		        	Article article =  new Article((int)idA, name, price, description,artImgPath,quantity, isFood, visibility, (int)idR,(int)articleRanking);
 		        	listOfArticles.add(article);
 		        	
 		        } 		      
@@ -607,23 +629,6 @@ public class Database {
 		}
 		return listOfRestaurants;
 	}
-
-	
-	
-	
-//	private Date convertStringToDate(String dateString)
-//	{
-//	    Date date = null;
-//	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//	    try{
-//	        date = df.parse(dateString);
-//	    }
-//	    catch ( Exception ex ){
-//	        System.out.println(ex);
-//	    }
-//	    return date;
-//	}	
-	
 	public void deleteRestaurant(int id) {
 		if(restaurantExist(id)) {
 			for(Restaurant restaurant: restaurants.values()) {

@@ -13,25 +13,26 @@
     <button data-ng-click="addRestaurant()" data-ng-if="loginuser.role == 'ADMIN'">Add new restaurant</button>
 	<div>Restaurants:</div>
     <div data-ng-repeat="restaurant in restaurants | filter: searcher" data-ng-if="restaurant.visibility == true" class="restaurant">
+    <input type="checkbox" data-ng-model="restaurant.liked" data-ng-click="likeUnlikeRestaurant(restaurant.id)" data-ng-checked="isChecked(restaurant.id)" data-ng-if="loginuser.role == 'CUSTOMER'">
         <div>Restaurant Name: {{restaurant.name}}</div>
-        <div>Restaurant Cathegory: {{restaurant.category}}</div>
+        <div>Restaurant Category: {{restaurant.category}}</div>
         <div>Restaurant Address: {{restaurant.adress}}</div>
-        <button data-ng-click="showMenu(restaurant.id)" data-ng-if="loginuser.role == 'CUSTOMER'">Menu</button>
+        <button data-ng-click="showMenu(restaurant.id)" data-ng-if="loginuser.role == 'CUSTOMER' || loginuser.role == 'ADMIN'">Menu</button>
    		<button data-ng-click="showMenu(restaurant.id)" data-ng-if="loginuser.role == 'ADMIN'">Manage Articles</button>
           <div class="modal" data-ng-show="restaurant.Editable == true">
             <div class="modal-content">
             <form name="frm" >
                 <span class="close" data-ng-click="exitEditRestaurant()">&times;</span>
                 <label>Restaurant name: </label><br />
-                <input style="width: 35%" data-ng-model="selectedRestaurant.name" id="Name_{{$index}}" name="Name_{{$index}}" required="" placeholder="Name"/>
+                <input style="width: 35%" data-ng-model="selectedRestaurant.name" id="Name_{{$index}}" name="Name_{{$index}}" data-required="" placeholder="Name"/>
                 <span class="required" data-ng-show="frm.Name_{{$index}}.$error.required">Restaurant name is required</span>  
                 <br />
                 <label>Restaurant adress: </label><br />
-                <input style="width: 35%" data-ng-model="selectedRestaurant.adress" id="Adress_{{$index}}" name="Adress_{{$index}}" required="" placeholder="Adress"/>
+                <input style="width: 35%" data-ng-model="selectedRestaurant.adress" id="Adress_{{$index}}" name="Adress_{{$index}}" data-required="" placeholder="Adress"/>
                 <span class="required" data-ng-show="frm.Adress_{{$index}}.$error.required">Restaurant adress is required</span>  
                 <br />
                 <label>Restaurant category: </label><br />
-                <select name="Category_{{$index}}" required="" id="Category_{{$index}}"
+                <select name="Category_{{$index}}" data-required="" id="Category_{{$index}}"
                     data-ng-model="selectedRestaurant.category" 
                     data-ng-options="restaurantCategory.value as restaurantCategory.name for restaurantCategory in enumRestaurantCathegories">
                     <option value="">- Please Select -</option>
@@ -41,12 +42,26 @@
                 <div class="buttons-container">
                     <button data-ng-click="frm.$invalid || saveRestaurant(selectedRestaurant);" title="Save">Save</button>
                     <button data-ng-click="exitEditRestaurant()" title="Cancel">Cancel</button>
-                </div>  
-            </div>  
-              
-            </form>                                                  
+                </div>    
+            </form>    
+         </div>                                                
         </div>
         <button data-ng-click="editRestaurant(restaurant.id)" data-ng-if="loginuser.role == 'ADMIN'">Edit</button>
         <button data-ng-click="deleteRestaurant(restaurant)" data-ng-if="loginuser.role == 'ADMIN'">Delete</button>
     </div>
+    
+    
+    <!-- Listing popular/rated food/drinks -->
+    <div>Most bought food/drinks:</div>
+    <div data-ng-repeat="rankedArticle in rankedArticles | orderBy:rankedArticle.articleRanking | filter: filterRanked | limitTo:10"  class="article">
+        <div><img src="img/{{rankedArticle.artImgPath}}" style="width:100%;"></div>
+        <div>Article Name: {{rankedArticle.name}}</div>
+        <div>Article Rating: {{rankedArticle.articleRanking}}</div>
+        <div>Article Description: {{rankedArticle.description}}</div>
+       	<div>Article Quantity: {{rankedArticle.quantity}}</div>
+        <div>Article Type: {{getArticleTypeName(rankedArticle.food).name}}</div>
+        <div>Article Price: {{rankedArticle.price}} Din</div>
+    </div>
+    
+    
 </div>

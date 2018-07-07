@@ -1,12 +1,12 @@
 
-<div>
+<div class="box">
     <form name="frm" id="frm">
         <label for="username">Username:</label><br />
-        <input id="username" data-ng-model="loginuser.username" type="text" name="username" placeholder="Username" data-required="" autocomplete="off"/>
+        <input id="username" class="email" data-ng-model="loginuser.username" type="text" name="username" placeholder="Username" data-required="" autocomplete="off"/>
         <br />
         <label for="password">Password:</label><br />
-        <input id="password" data-ng-model="loginuser.password" type="password" name="password" placeholder="Password" data-required="" autocomplete="off"/>
-        <button data-ng-click="login()">login</button>
+        <input id="password" class="email" data-ng-model="loginuser.password" type="password" name="password" placeholder="Password" data-required="" autocomplete="off"/>
+        <button class="btnSignIn" data-ng-click="login()">login</button>
         <div data-ng-show="errorLogin">Username or password is wrong!</div>
     </form>
 </div>

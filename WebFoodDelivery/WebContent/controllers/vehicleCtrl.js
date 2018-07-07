@@ -58,6 +58,7 @@
             register: null,
             visibility: true,
             note: null,
+            yearOfProduction:null,
             Editable: true
         }
 
@@ -77,7 +78,8 @@
                inUse: vehicle.inUse,
                register: vehicle.register,
                visibility: vehicle.visibility,
-               note: vehicle.note
+               note: vehicle.note,
+               yearOfProduction: vehicle.yearOfProduction
        }
 
                 	if($scope.status == "update"){

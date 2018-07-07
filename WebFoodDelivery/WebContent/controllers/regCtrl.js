@@ -7,7 +7,8 @@ myModule.controller('regCtrl', ['$rootScope', '$scope', '$timeout', '$window', '
         name: "",
         surname: "",
         phone: "",
-        email: ""
+        email: "",
+        dateOfRegistration:""
     };
     $scope.submit = function () {
                  

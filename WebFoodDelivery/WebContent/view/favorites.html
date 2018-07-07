@@ -1,0 +1,8 @@
+     <div data-ng-if="loginuser.myFavoriteRestaurants.length == 0">
+     Your favorite list is empty.
+     </div>
+    <div data-ng-repeat="restaurant in restaurants | filter: filterMyFavorites" class="restaurant">
+        <div>Article Name: {{restaurant.name}}</div>
+        <div>Article Description: {{restaurant.category}}</div>
+        <div>Article Type: {{restaurant.adress}}</div>             
+    </div>

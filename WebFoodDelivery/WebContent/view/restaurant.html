@@ -1,43 +1,61 @@
 
   <!-- Available articles for selected restaurant -->
 <div>
-	<button data-ng-click="addArticle(article)" data-ng-if="loginuser.role == 'ADMIN'">Add new Article</button>
+	<button data-ng-click="addArticle()" data-ng-if="loginuser.role == 'ADMIN'">Add new Article</button>
 	<br>
 	<br>
     <div data-ng-repeat="article in Articles" data-ng-if="article.visibility == true" class="article">
+        <div><img src="img/{{article.artImgPath}}" style="width:100%;"></div>
         <div>Article Name: {{article.name}}</div>
         <div>Article Description: {{article.description}}</div>
+       	<div>Article Quantity: {{article.quantity}}</div>
         <div>Article Type: {{getArticleTypeName(article.food).name}}</div>
         <div>Article Price: {{article.price}} Din</div>
-        <button data-ng-click="orderArticle(article)" data-ng-if="loginuser.role == 'CUSTOMER'">Add to cart</button>
+        <button data-ng-click="orderArticle(article)" data-ng-if="loginuser.role == 'CUSTOMER' || loginuser.role == 'ADMIN'">Add to cart</button>
         <button data-ng-click="editArticle(article.id)" data-ng-if="loginuser.role == 'ADMIN'">Edit Article</button>
         <button data-ng-click="deleteArticle(article.id)" data-ng-if="loginuser.role == 'ADMIN'">Delete Article</button>
     </div>
     <!-- Order list user - buyer -->
     <div style="background-color: blue; height: 10px; width: 100%;"></div>
     <div data-ng-show="orderList.length != 0 && loginuser.role == 'CUSTOMER'">Your orders:</div>
-    <div data-ng-if="loginuser.role == 'CUSTOMER'" data-ng-repeat="order in orderList" class="orders">
-        <div>Article Name: {{order.articleName}}</div>
-        <div>Article Quantity: {{order.quantity}} x</div>
+    <div data-ng-if="loginuser.role == 'CUSTOMER' || loginuser.role == 'ADMIN'" data-ng-repeat="order in orderList" class="orders">
+        <div>Article Name: {{order.name}}</div>
+        <div>Article Quantity: {{order.amount}} x</div>
         <div>Article Price: {{order.price}}</div>
         <button data-ng-click="removeOrderFromCart(order)">Remove</button>
     </div>
-    <div data-ng-show="totalPrice > 0 && loginuser.role == 'CUSTOMER'">Total Price: {{totalPrice}}</div>
-    <button data-ng-show="orderList.length > 0 && loginuser.role == 'CUSTOMER'" data-ng-click="makeOrder()">Checkout and buy:</button><br/><br/>
-       <div data-ng-repeat="orderForDispatch in dispatcherOrders" class="ordersToDispatch" data-ng-if="loginuser.role == 'CUSTOMER'">
-        <div data-ng-repeat="orderToServe in orderForDispatch.listOfOrders" class="article">
-            <div>Article Name: {{orderToServe.name}}</div>
-            <div>Quantity: {{orderToServe.quantity}}</div>
-        </div>
-        <div style="color: black;">Payment: {{orderForDispatch.totalToPay}} din</div>
-        <div style="color: black;">Order status: {{getOrderStatusName(orderForDispatch.orderStatus).name}} </div>
-       </div>            
+    <div data-ng-if="loginuser.role == 'ADMIN' && orderList.length != 0">
+
+    <div>You are creating order as admin, you must attach customer to this order:</div>
+    <div>
+   		<select name="attachOrderToUser" id="attachOrderToUser" data-ng-change="onChangeAttachUser(attachOrderToUser)"
+                   data-ng-model="attachOrderToUser" 
+                   data-ng-options="user.id as user.name for user in customerUsersArray">
+                   <option value="">- Please Select -</option>
+        </select>
+        <span class="required" data-ng-show="attachOrderToUser == null">Customer is required!</span> 
+    </div>
+    <div>
+   		<select name="attachOrderToDeliverer" id="attachOrderToDeliverer" data-ng-change="onChangeAttachDeliverer(attachOrderToDeliverer)"
+                   data-ng-model="attachOrderToDeliverer" 
+                   data-ng-options="user.id as user.name for user in delivererUsersArray">
+                   <option value="">- Please Select -</option>
+        </select>
+    </div>
+
+    </div>
+    
+     <div data-ng-show="totalPrice > 0 && (loginuser.role == 'CUSTOMER' || loginuser.role == 'ADMIN')">Total Price: {{totalPrice}}</div>
+    <button data-ng-show="orderList.length > 0 && (loginuser.role == 'CUSTOMER' || loginuser.role == 'ADMIN')" data-ng-click="makeOrder()">Checkout and buy:</button><br/><br/>
+
+    
+    <!-- Admin edit section -->
        <div class="modal" data-ng-show="selectedArticle.Editable == true">
             <div class="modal-content">
             <form name="frm"> 
                 <span class="close" data-ng-click="exitEditArticle()">&times; </span>
                 <div data-ng-show="status!='update'"><label>Article Name: </label><br />
-                <input style="width: 35%" data-ng-model="selectedArticle.name" id="ArticleName" name="ArticleName" required="" placeholder="Article Name"/>
+                <input style="width: 35%" data-ng-model="selectedArticle.name" id="ArticleName" name="ArticleName" data-required="" placeholder="Article Name"/>
                 <span class="required" data-ng-show="frm.ArticleName.$error.required">Article Name is required</span>  
                 <br />
                 </div>
@@ -45,29 +63,27 @@
                 <label>Article description: </label><br />
                 <input style="width: 35%" data-ng-model="selectedArticle.description" id="ArticleDesc" name="ArticleDesc" placeholder="Article Description"/>
                 <br />
+                <label>Article Image Name: </label><br />
+                <input style="width: 35%" data-ng-model="selectedArticle.artImgPath" id="artImgPath" name="artImgPath" placeholder="Article image name"/>
+                <br />
                 </div>
                 <div><label>Article Quantity: </label><br />
-                <input style="width: 35%" data-ng-model="selectedArticle.quantity" id="ArticleQuantity" name="ArticleQuantity" required="" placeholder="Article Quantity"/>
+                <input style="width: 35%" data-ng-model="selectedArticle.quantity" id="ArticleQuantity" name="ArticleQuantity" data-required="" placeholder="Article Quantity"/>
                 <span class="required" data-ng-show="frm.ArticleQuantity.$error.required">Article Quantity is required</span>  
                 <br />
                 </div>
                 <div><label>Article Price: </label><br />
-                <input style="width: 35%" type="number" data-ng-model="selectedArticle.price" id="ArticlePrice" name="ArticlePrice" required="" placeholder="Article Price"/>
+                <input style="width: 35%" type="number" data-ng-model="selectedArticle.price" id="ArticlePrice" name="ArticlePrice" data-required="" placeholder="Article Price"/>
                 <span class="required" data-ng-show="frm.ArticlePrice.$error.required">Article Price is required</span>  
                 <br />
                 </div>
-<!-- 				<div><label>Article Price: </label><br /> -->
-<!--                 <input style="width: 35%" data-ng-model="selectedArticle.price" id="ArticlePrice" name="ArticlePrice" required="" placeholder="Article Price"/> -->
-<!--                 <span class="required" data-ng-show="frm.ArticlePrice.$error.required">Article Price is required</span>   -->
-<!--                 <br /> -->
-<!-- 				</div> -->
 				<div>	
 				<label>Article Type:</label><br />			
                     <span>
                         <input
                             data-ng-value="true" 
                             data-ng-model="selectedArticle.food" 
-                            required=""
+                            data-required=""
                             type="radio" 
                             name="ArticleType"                             
                             />Food
@@ -76,7 +92,7 @@
                         <input
                             data-ng-value="false" 
                             data-ng-model="selectedArticle.food" 
-                            required=""
+                            data-required=""
                             type="radio" 
                             name="ArticleType"                             
                             />Drink
@@ -84,11 +100,10 @@
 				<span class="required" data-ng-show="frm.ArticleType.$error.required">Article Type is required</span>  
 				</div>
                 <div class="buttons-container">
-                    <button data-ng-click="frm.$invalid || saveArticle(selectedArticle);" title="Save">Save</button>
+                    <button data-ng-click="frm.$invalid || saveArticle();" title="Save">Save</button>
                     <button data-ng-click="exitEditArticle()" title="Cancel">Cancel</button>
                 </div>  
-            </div>  
-              
-            </form>                                                  
+			</form>
+			</div>                                                  
         </div>
 </div>

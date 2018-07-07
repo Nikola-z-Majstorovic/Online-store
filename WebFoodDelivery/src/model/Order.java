@@ -6,24 +6,25 @@ import java.util.ArrayList;
 public class Order {
 
 	private int id;
-//	private Date dateOfOrder;
+	private String dateOfOrder;
 	private int idC;
-	private int	idD;
+	private String	idD;
 	private int idR;
 	private Status status;
 	private String note;
 	private boolean visibility;
 	private ArrayList<ArticleOrders> articleOrders;
+	private double price;
 	
 	public Order() {
 		
 	}
 	
-	public Order(int id,int idC, int idD, int idR, Status status, String note, ArrayList<ArticleOrders> articleOrders,boolean visibility
+	public Order(int id,String dateOfOrder,int idC, String idD, int idR, Status status, String note, ArrayList<ArticleOrders> articleOrders,boolean visibility,double price
 			) {
 		super();
 		this.id = id;
-//		this.dateOfOrder = dateOfOrder;
+		this.dateOfOrder = dateOfOrder;
 		this.idC = idC;
 		this.idD = idD;
 		this.idR = idR;
@@ -31,14 +32,15 @@ public class Order {
 		this.note = note;
 		this.visibility = visibility;
 		this.articleOrders = articleOrders;
+		this.price = price;
 	}
-//
-//	public Date getDateOfOrder() {
-//		return dateOfOrder;
-//	}
-//	public void setDateOfOrder(Date dateOfOrder) {
-//		this.dateOfOrder = dateOfOrder;
-//	}
+ 
+	public String getDateOfOrder() {
+		return dateOfOrder;
+	}
+	public void setDateOfOrder(String dateOfOrder) {
+		this.dateOfOrder = dateOfOrder;
+	}
 
 	public Status getStatus() {
 		return status;
@@ -65,10 +67,10 @@ public class Order {
 	public void setIdC(int idC) {
 		this.idC = idC;
 	}
-	public int getIdD() {
+	public String getIdD() {
 		return idD;
 	}
-	public void setIdD(int idD) {
+	public void setIdD(String idD) {
 		this.idD = idD;
 	}
 	public int getIdR() {
@@ -93,11 +95,21 @@ public class Order {
 		this.articleOrders = articleOrders;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", idC=" + idC + ", idD=" + idD + ", idR=" + idR
+		return "Order [id=" + id + ", dateOfOrder=" + dateOfOrder + ", idC=" + idC + ", idD=" + idD + ", idR=" + idR
 				+ ", status=" + status + ", note=" + note + ", visibility=" + visibility + ", articleOrders="
-				+ articleOrders + "]";
+				+ articleOrders + ", price=" + price + "]";
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 }

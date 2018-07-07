@@ -1,24 +1,24 @@
-<div>
+<div class="box">
     <form name="frm">
         <label for="username">Username:</label><br />
-        <input id="username" data-ng-model="regUser.username" type="text" name="username" placeholder="Username" data-required="" autocomplete="username"/>
+        <input id="username" class="email" data-ng-model="regUser.username" type="text" name="username" placeholder="Username" data-required="" autocomplete="username"/>
       	<span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
         <label for="password">Password:</label><br />
-        <input id="password" data-ng-model="regUser.password" type="password" name="password" placeholder="Password" data-required="" autocomplete="password"/>
+        <input id="password" class="email" data-ng-model="regUser.password" type="password" name="password" placeholder="Password" data-required="" autocomplete="password"/>
         <span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
         <label for="name">Name:</label><br />
-        <input id="name" data-ng-model="regUser.name" type="text" name="name" placeholder="Name" data-required="" autocomplete="name"/>
+        <input id="name" class="email" data-ng-model="regUser.name" type="text" name="name" placeholder="Name" data-required="" autocomplete="name"/>
 		<span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
         <label for="surname">Surname:</label><br />
-        <input id="surname" data-ng-model="regUser.surname" type="text" name="Surname" placeholder="Surname" data-required="" autocomplete="Surname"/>
+        <input id="surname" class="email" data-ng-model="regUser.surname" type="text" name="Surname" placeholder="Surname" data-required="" autocomplete="Surname"/>
         <span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
         <label for="phone">Phone:</label><br />
-        <input id="phone" data-ng-model="regUser.phone" type="tel" name="Phone" placeholder="Phone" data-required="" autocomplete="Phone"/>
+        <input id="phone" class="email" data-ng-model="regUser.phone" type="tel" name="Phone" placeholder="Phone" data-required="" autocomplete="Phone"/>
         <span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
         <label for="email">Email:</label><br />
-        <input id="email" data-ng-model="regUser.email" type="email" name="Email" placeholder="Email" data-required="" autocomplete="Email"/>
+        <input id="email" class="email" data-ng-model="regUser.email" type="email" name="Email" placeholder="Email" data-required="" autocomplete="Email"/>
        <span class="required" data-ng-show="frm.username.$error.required">*</span><br/>
-        <button data-ng-click="frm.$invalid || submit()">Sign up</button>
+        <button class="btnSignIn" data-ng-click="frm.$invalid || submit()">Sign up</button>
         <div data-ng-show="errorLogin">Username or password is wrong!</div>
     </form>
 </div>

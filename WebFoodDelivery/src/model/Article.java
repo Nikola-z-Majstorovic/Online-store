@@ -11,13 +11,14 @@ public class Article {
 	private boolean isFood;
 	private boolean visibility;
 	private int idR;
+	private int articleRanking;
 		
 	public Article() {
 		
 	}
 	
 	public Article(int id, String name, double price, String description, String artImgPath, String quantity,
-			boolean isFood, boolean visibility, int idR) {
+			boolean isFood, boolean visibility, int idR,int articleRanking) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -28,6 +29,7 @@ public class Article {
 		this.isFood = isFood;
 		this.visibility = visibility;
 		this.idR = idR;
+		this.articleRanking = articleRanking;
 	}
 
 	public int getId() {
@@ -102,11 +104,20 @@ public class Article {
 		this.quantity = quantity;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Article [id=" + id + ", name=" + name + ", price=" + price + ", description=" + description
 				+ ", artImgPath=" + artImgPath + ", quantity=" + quantity + ", isFood=" + isFood + ", visibility="
-				+ visibility + ", idR=" + idR + "]";
+				+ visibility + ", idR=" + idR + ", articleRanking=" + articleRanking + "]";
+	}
+
+	public int getArticleRanking() {
+		return articleRanking;
+	}
+
+	public void setArticleRanking(int articleRanking) {
+		this.articleRanking = articleRanking;
 	}
 
 	

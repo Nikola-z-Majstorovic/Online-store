@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Arrays;
+
 public class User{
 
 
@@ -11,16 +13,19 @@ public class User{
 	private Role role;
 	private String phone;
 	private String email;
-//	private Date dateOfRegistration;
+	private String dateOfRegistration;
 	private String register;
-	
+	private String myFavoriteRestaurants[];
+
 	public User()   {
 		super();
 	}
 
 
+
+
 	public User(int id, String username, String password, String name, String surname, Role role, String phone,
-			String email, String register) {
+			String email, String dateOfRegistration, String register, String[] myFavoriteRestaurants) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -30,8 +35,12 @@ public class User{
 		this.role = role;
 		this.phone = phone;
 		this.email = email;
-		this.setRegister(register);
+		this.dateOfRegistration = dateOfRegistration;
+		this.register = register;
+		this.myFavoriteRestaurants = myFavoriteRestaurants;
 	}
+
+
 
 
 
@@ -84,12 +93,15 @@ public class User{
 		this.surname = surname;
 	}
 
-
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", name=" + name + ", surname="
-				+ surname + ", role=" + role + ", phone=" + phone + ", email=" + email + ", register=" + register + "]";
+				+ surname + ", role=" + role + ", phone=" + phone + ", email=" + email + ", dateOfRegistration="
+				+ dateOfRegistration + ", register=" + register + ", myFavoriteRestaurants="
+				+ Arrays.toString(myFavoriteRestaurants) + "]";
 	}
+
 
 	public Role getRole() {
 		return role;
@@ -99,14 +111,6 @@ public class User{
 		this.role = role;
 	}
 
-//	public Date getDateOfRegistration() {
-//		return dateOfRegistration;
-//	}
-//
-//	public void setDateOfRegistration(Date dateOfRegistration) {
-//		this.dateOfRegistration = dateOfRegistration;
-//	}
-//
 	public int getId() {
 		return id;
 	}
@@ -123,6 +127,26 @@ public class User{
 
 	public void setRegister(String register) {
 		this.register = register;
+	}
+
+
+	public String getDateOfRegistration() {
+		return dateOfRegistration;
+	}
+
+
+	public void setDateOfRegistration(String dateOfRegistration) {
+		this.dateOfRegistration = dateOfRegistration;
+	}
+
+
+	public String[] getMyFavoriteRestaurants() {
+		return myFavoriteRestaurants;
+	}
+
+
+	public void setMyFavoriteRestaurants(String myFavoriteRestaurants[]) {
+		this.myFavoriteRestaurants = myFavoriteRestaurants;
 	}
 
 

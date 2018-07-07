@@ -1,9 +1,9 @@
 ﻿myModule.controller('homeCtrl', ['$rootScope', '$scope', '$timeout', '$window','dataService','appService', function ($rootScope, $scope, $timeout, $window,dataService,appService) {
     //-----------------------------------------------------------------------------------------------------------
     console.log('we are in home ctrl');
+    console.log($rootScope.loginuser);
     $scope.restaurants=[];
     $scope.refreshRestaurants = function(){
-    	console.log("usao u refersh");
     dataService.getAll('restaurants','getRestaurants',null,function(res) {
     	if(res.status==200){
     		$scope.restaurants= res.data;
@@ -15,8 +15,24 @@
     	}
     	$scope.backupRestaurants = angular.copy($scope.restaurants);
     });
+    dataService.getAll('articles','getArticles',null,function(res) {
+    	if(res.status==200){
+    		$scope.rankedArticles= res.data;
+    	
+
+    	}else {
+    		console.log("greska");    		
+    	}
+
+    });
     };
     
+    $scope.filterRanked = function (item) { 
+    	if(item.articleRanking > 0){
+    		return item;
+    	}
+    };
+
     $scope.refreshRestaurants();
     
     $scope.addRestaurant = function () {
@@ -46,11 +62,8 @@
                visibility: restaurant.visibility,
        }
 
-                	if($scope.status == "update"){
-                		console.log('bingo update');
-
-	                	dataService.update('restaurants', 'updateRestaurant', restaurantToAdd, function(res){
-	            	    	console.log(res);
+                	if($scope.status == "update"){                	
+	                	dataService.update('restaurants', 'updateRestaurant', restaurantToAdd, function(res){	            	    	
 	            	    	if(res.status == 200){
 	            	    		$scope.restaurants = [];
 	            	    		$scope.refreshRestaurants();
@@ -65,10 +78,7 @@
 
         	
         	if($scope.status == "create"){
-        		console.log('bingo create');
-        		console.log(restaurantToAdd);
-	            dataService.create('restaurants', 'addRestaurant', restaurantToAdd, function(res){
-	    	    	console.log(res);
+	            dataService.create('restaurants', 'addRestaurant', restaurantToAdd, function(res){	    	    	
 	    	    	if(res.status == 200){
 	    	    		$scope.restaurants = [];
 	    	    		$scope.refreshRestaurants();
@@ -106,18 +116,9 @@
 
     
     $scope.deleteRestaurant = function (restaurant) {
-        //first remove vehicle from users use
-    	//NAPOMENA
-//        var user = appService.lodashFindBy($rootScope.users, 'register', vehicle.register);
-//        if (user != null) {
-//            user.vehicleId = null;
-//        }
 
-    	dataService.delete('restaurants', 'deleteRestaurant', restaurant.id, function(res){
-	    	console.log(res);
+    	dataService.delete('restaurants', 'deleteRestaurant', restaurant.id, function(res){	    	
 	    	if(res.status == 200){
-	    		console.log(res.data)
-	    		console.log($scope.restaurants );
 	    		$scope.restaurants = [];
 	    	    $scope.refreshRestaurants();
 	    	}else{
@@ -133,6 +134,40 @@
     $scope.getRestaurantCathegoryName = function (restaurantCathegoryValue) {
         return appService.lodashFindBy($rootScope.enumRestaurantCathegories, 'value', restaurantCathegoryValue);
     };
+
+    
+    $scope.isChecked = function (restaurantID){ 
+    	
+    	var userFavoriteRestaurants = angular.copy($rootScope.loginuser.myFavoriteRestaurants);
+
+    	if(_.includes(userFavoriteRestaurants, restaurantID)){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    }
+    $scope.likeUnlikeRestaurant = function (restaurantID){
+
+    	var userFavoriteRestaurants =  angular.copy($rootScope.loginuser.myFavoriteRestaurants);
+    	if(_.includes(userFavoriteRestaurants, restaurantID)){
+    		$rootScope.loginuser.myFavoriteRestaurants = angular.copy(_.without($rootScope.loginuser.myFavoriteRestaurants, restaurantID));
+    	}else{
+    		$rootScope.loginuser.myFavoriteRestaurants.push(restaurantID);
+    	}    	
+    	dataService.update('users', 'updateUser', $rootScope.loginuser, function(res){		  
+	    	if(res.status == 200){    		
+	    		
+	    	}else{
+	    		console.log("something went wrong");
+	    	}
+
+	    });
+    }
+    
+    $scope.getArticleTypeName = function (articleTypeValue) {
+        return appService.lodashFindBy($rootScope.enumArticleType, 'value', articleTypeValue);
+    };;
+    
     
 }]);
 

@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Date;
 
 public class Vehicle {
 
@@ -8,7 +7,7 @@ public class Vehicle {
 	private String model;//punto
 	private Type type;
 	private String register;
-//	private Date yearOfProduction;
+	private String yearOfProduction;
 	private boolean inUse;
 	private String note;
 	private boolean visibility;
@@ -17,14 +16,14 @@ public class Vehicle {
 		super();
 	}
 	
-	public Vehicle(String brand, String model, Type type, String register, boolean inUse,
+	public Vehicle(String brand, String model, Type type, String register,String yearOfProduction, boolean inUse,
 			String note, boolean visibility) {
 		super();
 		this.brand = brand;
 		this.model = model;
 		this.type = type;
 		this.register = register;
-//		this.yearOfProduction = yearOfProduction;
+		this.setYearOfProduction(yearOfProduction);
 		this.inUse = inUse;
 		this.note = note;
 		this.visibility = visibility;
@@ -63,13 +62,6 @@ public class Vehicle {
 		this.register = register;
 	}
 
-//	public Date getYearOfProduction() {
-//		return yearOfProduction;
-//	}
-//
-//	public void setYearOfProduction(Date yearOfProduction) {
-//		this.yearOfProduction = yearOfProduction;
-//	}
 
 	public boolean isInUse() {
 		return inUse;
@@ -96,10 +88,18 @@ public class Vehicle {
 	}
 
 
+	public String getYearOfProduction() {
+		return yearOfProduction;
+	}
+
+	public void setYearOfProduction(String yearOfProduction) {
+		this.yearOfProduction = yearOfProduction;
+	}
+
 	@Override
 	public String toString() {
 		return "Vehicle [brand=" + brand + ", model=" + model + ", type=" + type + ", register=" + register
-				+ ", inUse=" + inUse + ", note=" + note + ", visibility="
+				+ ", yearOfProduction=" + yearOfProduction + ", inUse=" + inUse + ", note=" + note + ", visibility="
 				+ visibility + "]";
 	}	
 

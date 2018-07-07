@@ -1,0 +1,9 @@
+<div data-ng-repeat="myOrder in myOrders" class="ordersToDispatch" data-ng-if="loginuser.role == 'CUSTOMER'">
+        <div data-ng-repeat="article in myOrder.articleOrders" class="article">
+            <div>Article Name: {{article.name}}</div>
+            <div>Quantity: {{article.amount}}</div>
+		</div>
+		 <div style="color: black;">Date ordered: {{myOrder.dateOfOrder}}</div>
+         <div style="color: black;">Payment: {{myOrder.price}}</div>
+         <div style="color: black;">Order status: {{myOrder.status}}</div>
+</div>

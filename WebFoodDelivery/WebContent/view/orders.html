@@ -1,0 +1,72 @@
+<div>
+    <!-- Deliverer orders list user - dispatcher -->
+    <div style="background-color: blue; height: 10px; width: 100%;"></div>
+    <div data-ng-repeat="order in orders" class="ordersToDispatch" data-ng-if="(order.idD == null || order.idD == loginuser.id) && loginuser.role == 'DELIVERER' && order.visibility==true">
+   
+        <div style="color:black;">Ordered on date and time: {{order.dateOfOrder}}</div>
+        <div style="color:black;">Ordered status: {{order.status}}</div>
+        <div data-ng-repeat="orderToServe in order.articleOrders" class="article">
+            <div>Article Name: {{orderToServe.name}}</div>
+            <div>Quantity: {{orderToServe.amount}}</div>
+        </div>
+        <div style="color: black;">Payment to request: {{order.price}} din</div>
+        <button data-ng-click="assingOrderToMe(order.id)" data-ng-if="order.status == 'Ordered' && loginuser.role != 'ADMIN'">Assign this order to me</button>
+        <button data-ng-click="completeOrder(order.id)" data-ng-if="order.status == 'Delivery_in_progress' && order.idD == loginuser.id">Complete Order</button>
+    </div>
+    <!-- Admin orders list user - Admin -->
+    <div data-ng-repeat="order in orders" class="ordersToDispatch" data-ng-if="loginuser.role == 'ADMIN' && order.visibility==true">
+        <div style="color:black;">Ordered on date and time: {{order.dateOfOrder}}</div>
+        <div style="color:black;">Ordered status: {{order.status}}</div>
+        <div data-ng-repeat="orderToServe in order.articleOrders" class="article">
+            <div>Article Name: {{orderToServe.name}}</div>
+            <div>Quantity: {{orderToServe.amount}}</div>
+        </div>
+        <div style="color: black;">Payment to request: {{order.price}} din</div>
+        <button data-ng-click="assingOrderToMe(order.id)" data-ng-if="order.status == 'Ordered' && loginuser.role != 'ADMIN'">Assign this order to me</button>
+        <button data-ng-click="completeOrder(order.id)" data-ng-if="order.status == 'Delivery_in_progress' && order.idD == loginuser.id">Complete Order</button>
+        <button data-ng-click="editOrder(order)" data-ng-if="loginuser.role == 'ADMIN' && order.status != 'Delivery_in_progress' && order.status != 'Delivered' && order.status != 'Canceled'">Edit Order</button>
+        <button data-ng-click="deleteSelectedOrder(order.id)" data-ng-if="loginuser.role == 'ADMIN'">Delete Order</button>
+        <button data-ng-click="cancelSelectedOrder(order)" data-ng-if="loginuser.role == 'ADMIN' && order.status != 'Delivered'">Cancel Order</button>
+    </div>
+    
+     <div class="modal" style="padding-top: 100px !important;" data-ng-show="selectedOrder.Editable == true">
+            <div class="modal-content">
+            <form name="frm"> 
+                <span class="close" data-ng-click="exitEditOrder()">&times; </span>
+                <div>Customer name: {{getUserInfo(selectedOrder.idC, 'name')}}</div>
+                <br />
+                <div>Customer address: {{getUserInfo(selectedOrder.idC, 'address')}}</div>
+                <br />
+                <div>Customer phone: {{getUserInfo(selectedOrder.idC, 'phone')}}</div>
+                <br />
+                <div>Total price: {{selectedOrder.price}} din</div>
+                <br />
+                <div data-ng-repeat="article in ArticlesFromOrderedRestaurant" data-ng-if="article.visibility == true" class="article">
+			        <div>Article Name: {{article.name}}</div>
+			        <div>Article Description: {{article.description}}</div>
+			        <div>Article Type: {{getArticleTypeName(article.food).name}}</div>
+			        <div>Article Price: {{article.price}} Din</div>
+			        <button data-ng-click="orderArticle(article)">Add to order</button>
+			    </div>
+			    <br>
+			    <br>
+                <div data-ng-repeat="articleOrdered in selectedOrder.articleOrders" class="article">
+		            <div>Article Name: {{articleOrdered.name}}</div>
+		            <div>Quantity: {{articleOrdered.amount}}</div>
+		            <button data-ng-click="removeSelectedArticle(articleOrdered)">Remove Article</button>
+		        </div>
+                <div>
+				<select name="DelivererOnOrder" id="DelivererOnOrder"
+                    data-ng-model="selectedOrder.idD" 
+                    data-ng-options="user.id as user.name for user in delivererUsersArray">
+                    <option value="">- Please Select -</option>
+                </select>
+				</div>
+                <div class="buttons-container">
+                    <button data-ng-click="frm.$invalid || saveOrder();" title="Save">Save</button>
+                    <button data-ng-click="exitEditOrder()" title="Cancel">Cancel</button>
+                </div>  
+			</form>
+			</div>                                                  
+     </div>
+</div>

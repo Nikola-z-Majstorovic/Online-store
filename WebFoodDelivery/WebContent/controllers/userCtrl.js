@@ -10,27 +10,16 @@
 	    		$scope.users = res.data;
 		    	for (var i = 0; i < $scope.users.length; i++) {
 		    		$scope.users[i].Editable = false;
-		    		
 		    		if($scope.users[i].role =="DELIVERER"){ 
 		    			$scope.users[i].oldVehicleRegister = angular.copy($scope.users[i].register);
 		    		}
-		        }
-		    	
-		    	
+		        }		    	    
 		    	 dataService.getAll('vehicles', 'getVehicles', null, function(res){
 		    	    	console.log(res);
 		    	    	if(res.status == 200){
 		    	    		$scope.vehicles = res.data;
 		    	    		
 		    	    		$scope.vehicles = angular.copy(appService.lodashFilterBy($scope.vehicles, 'visibility', true));
-		    	    		
-//		    	    		for (var i = 0; i < $scope.users.length; i++) {
-////		    	    			for (var j = 0; i < $scope.vehicles.length; j++) {
-////			    		    		if($scope.users[i].register == $scope.vehicles[j].register){
-////			    		    			$scope.vehicles[j].userIdOld = $scope.users[i].id;
-////			    		    		}
-////			    		        }    		    		
-//		    		        }
 		    	    		
 		    	    		console.log($scope.vehicles);
 		    	    		
@@ -45,7 +34,6 @@
 	    		console.log("something went wrong");
 	    	}
 	    	
-	    	//$scope.backupUsers = angular.copy($scope.users);
 
 	    });
     };
@@ -72,7 +60,6 @@
         
         $scope.selectedUser = {};
 
-    	//$scope.users = angular.copy($scope.backupUsers);
        
     }
 

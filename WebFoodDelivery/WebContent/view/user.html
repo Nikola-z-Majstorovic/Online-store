@@ -13,7 +13,7 @@
                 <label>User Id: {{user.id}}</label><br />
                 <label>User Email: {{user.email}}</label><br />
                 <label>User Role: </label><br />
-                <select name="Role_{{$index}}" required="" id="Role_{{$index}}"
+                <select name="Role_{{$index}}" data-required="" id="Role_{{$index}}"
                     data-ng-model="selectedUser.role" 
                     data-ng-options="userRole.value as userRole.name for userRole in enumUserRoles">
                     <option value="">- Please Select -</option>
@@ -32,11 +32,9 @@
                 <div class="buttons-container">
                     <button data-ng-click="frm.$invalid || saveUser(selectedUser);" title="Save">Save</button>
                     <button data-ng-click="exitEditUser()" title="Cancel">Cancel</button>
-                </div>  
-            </div>  
-              
+                </div>                         
             </form>  
-            
+            </div>  
                                                         
         </div>
 		<button data-ng-click="editUser(user.id)">Edit</button>    

@@ -4,27 +4,31 @@
 				init : function() {
 				   $rootScope.loginuser = {
 				    		username:"",
-				    		password:""
+				    		password:"",
+				    		role: "NOBODY" 
 				    };
 						   
 					$rootScope.changeView = function(view) {
+
 						$location.path(view);
 					};
 					$rootScope.logOut = function() {
+						$rootScope.loginuser = {
+					    		username:"",
+					    		password:"",
+					    		role: "NOBODY" 
+					    };
 						$rootScope.changeView("/login");
 					};
 
-					$rootScope.enumVehicleTypes = [ {
-						name : 'Car',
-						value : 'Car'
-					}, { 
-						name : 'Bycicle',
-						value : 'Bycicle'
+					$rootScope.enumArticleType = [ {
+						name : 'Food',
+						value : true
 					}, {
-						name : 'Scooter',
-						value : 'Scooter'
+						name : 'Drink',
+						value : false
 					} ];
-
+					
 					$rootScope.enumRestaurantCathegories = [ {
 						name : 'Domestic kitchen',
 						value : 'Domestic_kitchen'
@@ -42,24 +46,30 @@
 						value : 'Pizzeria'
 					}];
 
-					$rootScope.enumArticleType = [ {
-						name : 'Food',
-						value : true
+//
+					$rootScope.enumVehicleTypes = [ {
+						name : 'Car',
+						value : 'Car'
+					}, { 
+						name : 'Bycicle',
+						value : 'Bycicle'
 					}, {
-						name : 'Drink',
-						value : false
+						name : 'Scooter',
+						value : 'Scooter'
 					} ];
 
-					$rootScope.enumOrderStatuses = [ {
-						name : 'Delivered',
-						value : 1
-					}, {
-						name : 'Comming',
-						value : 2
-					}, {
-						name : 'Processing',
-						value : 3
-					} ];
+
+
+//					$rootScope.enumOrderStatuses = [ {
+//						name : 'Delivered',
+//						value : 1
+//					}, {
+//						name : 'Comming',
+//						value : 2
+//					}, {
+//						name : 'Processing',
+//						value : 3
+//					} ];
 					
 					$rootScope.enumUserRoles = [ {
 						name : 'CUSTOMER',
@@ -70,7 +80,10 @@
 					} , {
 						name : 'DELIVERER',
 						value : 'DELIVERER'
-					} ];
+					}, {
+						name : 'NOBODY',
+						value : 'NOBODY'
+					}  ];
 				},
 				// #region Lodash helpers (remove/find/filter)
 				lodashRemoveBy : function(array, propertyName, propertyValue) {

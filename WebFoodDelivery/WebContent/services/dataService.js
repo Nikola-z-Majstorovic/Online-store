@@ -38,7 +38,6 @@
             });
         },
         update:function(ctrl,method,param,cb){
-
         	$http.put('/WebFoodDelivery/rest/' +ctrl+ '/'+ method, param)
             .then(function (response) {
             	cb(response);
